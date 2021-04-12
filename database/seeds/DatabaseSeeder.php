@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         \Illuminate\Support\Facades\DB::table('organizers')->where('email', 'demo1@worldskills.org')->update(['password_hash' => bcrypt('demopass1')]);
         \Illuminate\Support\Facades\DB::table('organizers')->where('email', 'demo2@worldskills.org')->update(['password_hash' => bcrypt('demopass2')]);
-
+        \Illuminate\Support\Facades\DB::table('attendees')->update(['password' => md5('Abcdef1234')]);
     }
 }
