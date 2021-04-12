@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth', 'isAuth']], function () {
     Route::resource('events/{event}/sessions', 'SessionController');
     Route::resource('events/{event}/channels', 'ChannelController');
     Route::resource('events/{event}/rooms', 'RoomController');
+    Route::get('events/{event}/report', 'ReportController@index')->name('report');
     Route::get('/', 'EventController@index')->name('home');
 });
 

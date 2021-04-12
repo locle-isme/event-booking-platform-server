@@ -10,7 +10,6 @@
     <title>{{ config('app.name', 'Event Booking Platform') }}</title>
 
     <!-- Scripts -->
-{{--    <script src="{{ asset('js/app.js') }}" defer></script>--}}
 
 <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -19,6 +18,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/Chart.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/Chart.min.js') }}"></script>
 </head>
 <body>
 @guest()
