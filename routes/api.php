@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['prefix' => 'v1'], function () {
+Route::group(['prefix' => 'v1', 'middleware' => 'cors'], function () {
     route::get('/events', 'API\EventManagement@index');
     route::get('/organizers/{oslug}/events/{eslug}', 'API\EventManagement@detail');
     route::post('/organizers/{oslug}/events/{eslug}/registration', 'API\EventManagement@registration');
