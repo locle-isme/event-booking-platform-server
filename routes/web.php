@@ -13,7 +13,7 @@
 
 
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'isAuth']], function () {
     Route::resource('events', 'EventController');
     Route::resource('events/{event}/tickets', 'TicketController');
     Route::resource('events/{event}/sessions', 'SessionController');
