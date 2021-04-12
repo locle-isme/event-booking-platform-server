@@ -11,6 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::resource('events', 'EventController');
+    Route::resource('events/{event}/tickets', 'TicketController');
+    Route::resource('events/{event}/sessions', 'SessionController');
+    Route::resource('events/{event}/channels', 'ChannelController');
+    Route::resource('events/{event}/rooms', 'RoomController');
+    Route::get('/', 'EventController@index')->name('home');
 });
+
+
+Auth::routes();
