@@ -62,6 +62,15 @@
             </main>
         </div>
     </div>
+    <script>
+        let cancelBtns = document.querySelectorAll('.btn.btn-link');
+        cancelBtns.forEach(btn => {
+            btn.onclick = function () {
+                event.preventDefault();
+                window.history.back();
+            }
+        })
+    </script>
 @endguest
 </body>
 </html>
