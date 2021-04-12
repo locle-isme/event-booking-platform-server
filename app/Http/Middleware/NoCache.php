@@ -15,6 +15,6 @@ class NoCache
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        return $next($request)->header('Cache-Control: no-cache, no-store, must-revalidate', true);
     }
 }
