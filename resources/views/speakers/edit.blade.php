@@ -60,7 +60,7 @@
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputAvatar">Avatar</label>
                 <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="file" class="form-control-file @if($errors->has('social_linking')) is-invalid @endif" id="inputAvatar" name="avatar">
+                <input type="file" class="form-control-file @if($errors->has('avatar')) is-invalid @endif" id="inputAvatar" name="avatar">
                 @if($errors->has('avatar'))
                     <div class="invalid-feedback">
                         {{$errors->first('avatar')}}

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSpeakerRequest;
+use App\Http\Requests\UpdateSpeakerRequest;
 use App\Speaker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class SpeakerController extends Controller
 {
@@ -84,9 +86,19 @@ class SpeakerController extends Controller
      * @param \App\Speaker $speaker
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Speaker $speaker)
+    public function update(UpdateSpeakerRequest $request, Speaker $speaker)
     {
         //
+        $validated = $request->validated();
+        if (isset($validated['avatar'])) {
+            $store_path = 'images\avatar';
+            $full_path = public_path($store_path);
+            $image_path = $this->uploadAvatar($validated['avatar'], $full_path);
+            $validated['avatar'] = $store_path . "\\" . $image_path;
+        }
+
+        $speaker->update($validated);
+        return redirect()->route('speakers.index')->with('message', 'Speaker successfully updated');
     }
 
     /**
@@ -98,5 +110,9 @@ class SpeakerController extends Controller
     public function destroy(Speaker $speaker)
     {
         //
+        File::delete($speaker->avatar);
+        $speaker->delete();
+        return redirect()->route('speakers.index')->with('message', 'Speaker successfully deleted');
+
     }
 }

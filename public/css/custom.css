@@ -133,3 +133,11 @@ main {
 .card-title {
     white-space: normal;
 }
+
+
+.description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+}
