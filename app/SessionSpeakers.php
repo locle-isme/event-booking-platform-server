@@ -17,6 +17,6 @@ class SessionSpeakers extends Model
 
     public function speaker()
     {
-        return $this->belongsTo(Speakers::class);
+        return $this->belongsTo(Speaker::class);
     }
 }
