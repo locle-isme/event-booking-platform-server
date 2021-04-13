@@ -17,11 +17,14 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cors']], function () {
     route::get('/organizers/{oslug}/events/{eslug}', 'API\EventManagement@detail');
     route::post('/organizers/{oslug}/events/{eslug}/registration', 'API\EventManagement@registration');
     route::get('/registrations', 'API\EventManagement@getRegistrations');
+
     route::post('/login', 'API\AttendeeManagement@login');
 //    route::get('/login', 'API\AttendeeManagement@login');
     route::post('/register', 'API\AttendeeManagement@register');
 //    route::get('/register', 'API\AttendeeManagement@register');
     route::get('/logout', 'API\AttendeeManagement@logout');
+
+    route::get('/speakers/{id}', 'API\SpeakerManagement@detail');
 });
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {

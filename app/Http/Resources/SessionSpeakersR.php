@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SessionR extends JsonResource
+class SessionSpeakersR extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +14,6 @@ class SessionR extends JsonResource
      */
     public function toArray($request)
     {
-        $response = collect($this->resource)->except('room_id');
-
-        $response['speakers'] = SessionSpeakersR::collection($this->sessionSpeakers);
-        $response['cost'] = (int) $response['cost'];
-        return $response;
+        return new SpeakerR($this->resource->speaker);
     }
 }

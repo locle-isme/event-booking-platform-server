@@ -15,7 +15,8 @@ class SpeakerR extends JsonResource
      */
     public function toArray($request)
     {
-        $speaker = Speaker::find($this->speaker_id);
+        //dd($this->resource);
+        $speaker = $this->resource;
         $speaker->avatar = url('/').'\\'.$speaker->avatar;
         return $speaker;
     }
