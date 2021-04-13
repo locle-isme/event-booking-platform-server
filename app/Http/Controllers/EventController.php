@@ -59,6 +59,11 @@ class EventController extends Controller
                 $session->channel_room = $room->channel->name . ' / ' . $room->name;
                 $session->start = date('H:i', strtotime($session->start));
                 $session->end = date('H:i', strtotime($session->end));
+                $speakers = $session->sessionSpeakers->map(function ($sessionSpeaker) {
+                    return $sessionSpeaker->speaker->name;
+                })->toArray();
+                //dd($session->speakers);
+                $session->speakers = implode(", ", $speakers);
                 return $session;
             });
         })->collapse()->sortBy('start')->values();

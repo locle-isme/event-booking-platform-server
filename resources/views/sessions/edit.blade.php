@@ -40,13 +40,18 @@
 
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
-                <label for="inputSpeaker">Speaker</label>
+                <label for="inputSpeakers">Speakers</label>
                 <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control @if($errors->has('speaker')) is-invalid @endif" id="inputSpeaker"
-                       name="speaker" placeholder="" value="{{old('speaker') ?? $session->speaker}}">
-                @if($errors->has('speaker'))
+                <select id="inputSpeakers" name="speakers[]"
+                        class="form-control @if($errors->has('speakers')) is-invalid @endif" multiple>
+                    @foreach($speakers as $speaker)
+                        <option value="{{$speaker->id}}"
+                                @if(in_array($speaker->id, $session->sessionSpeakers)) selected @endif>{{$speaker->name}}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('speakers'))
                     <div class="invalid-feedback">
-                        {{$errors->first('speaker')}}
+                        {{$errors->first('speakers')}}
                     </div>
                 @endif
             </div>

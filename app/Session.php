@@ -22,6 +22,6 @@ class Session extends Model
 
     public function sessionSpeakers()
     {
-        return $this->hasMany(SessionSpeakers::class);
+        return $this->hasMany(SessionSpeaker::class);
     }
 }

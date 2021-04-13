@@ -6,6 +6,8 @@ use App\Event;
 use App\Http\Requests\CreateSessionRequest;
 use App\Http\Requests\UpdateSessionRequest;
 use App\Session;
+use App\SessionSpeaker;
+use App\Speaker;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller
@@ -28,7 +30,8 @@ class SessionController extends Controller
     public function create(Event $event)
     {
         //
-        return view('sessions.create', compact('event'));
+        $speakers = Speaker::all();
+        return view('sessions.create', compact('event', 'speakers'));
     }
 
     /**
@@ -55,8 +58,15 @@ class SessionController extends Controller
             return redirect()->back()->withInput()->withErrors(['room' => 'Room Room already booked during this time']);
         }
 
-        unset($data['room']);
-        $room->sessions()->create($data);
+
+        $speakers = $data['speakers'];
+        unset($data['room'], $data['speakers']);
+        $session = $room->sessions()->create($data);
+        foreach ($speakers as $speaker) {
+            $session->sessionSpeakers()->create(
+                ['speaker_id' => $speaker]
+            );
+        }
         return redirect()->route('events.show', $event)->with('message', 'Session successfully created');
 
     }
@@ -83,7 +93,12 @@ class SessionController extends Controller
         //
         $session->start = date('Y-m-d H:i', strtotime($session->start));
         $session->end = date('Y-m-d H:i', strtotime($session->end));
-        return view('sessions.edit', compact('event', 'session'));
+        $speakers = Speaker::all();
+        $session->sessionSpeakers = $session->sessionSpeakers->map(function ($sessionSpeaker) {
+            return $sessionSpeaker->speaker_id;
+        })->toArray();
+        //dd($session->sessionSpeakers);
+        return view('sessions.edit', compact('event', 'session', 'speakers'));
     }
 
     /**
@@ -111,11 +126,23 @@ class SessionController extends Controller
         }
 
         $data['room_id'] = $data['room'];
-        unset($data['room']);
-        //dd($data);
+        $speakers = $data['speakers'];
+        unset($data['room'], $data['speakers']);
         $session->update($data);
-        return redirect()->route('events.show', $event)->with('message', 'Session successfully updated');
 
+        //remove all old records of session speakers
+        foreach ($session->sessionSpeakers as $sessionSpeaker) {
+            $sessionSpeaker->delete();
+        }
+
+        //add new records into session speakers
+        foreach ($speakers as $speaker) {
+            $session->sessionSpeakers()->create(
+                ['speaker_id' => $speaker]
+            );
+        }
+
+        return redirect()->route('events.show', $event)->with('message', 'Session successfully updated');
     }
 
     /**

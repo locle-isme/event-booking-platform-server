@@ -26,7 +26,7 @@ class UpdateSessionRequest extends FormRequest
         $end_point = [
             'title' => 'required',
             'type' => 'required',
-            'speaker' => 'required',
+            'speakers' => 'required',
             'room' => 'required',
             'start' => 'required|date_format:Y-m-d H:i|after:tomorrow',
             'end' => 'required|date_format:Y-m-d H:i|after:start',

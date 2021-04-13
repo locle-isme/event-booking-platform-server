@@ -52,7 +52,7 @@
                 <th>Time</th>
                 <th>Type</th>
                 <th class="w-100">Title</th>
-                <th>Speaker</th>
+                <th>Speakers</th>
                 <th>Channel</th>
             </tr>
             </thead>
@@ -64,7 +64,9 @@
                     <td>
                         <a href="{{route('sessions.edit', ['event' => $event, 'session' => $session])}}">{{$session->title}}</a>
                     </td>
-                    <td class="text-nowrap">{{$session->speaker}}</td>
+                    <td class="text-nowrap">
+                        {{$session->speakers}}
+                    </td>
                     <td class="text-nowrap">{{$session->channel_room}}</td>
                 </tr>
             @endforeach
