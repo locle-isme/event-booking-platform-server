@@ -39,7 +39,7 @@
                         <h4 class="card-title">{{$speaker->name}}</h4>
                         <p class="card-text">Birthday: {{$speaker->birthday}}</p>
                         <p class="card-text description"
-                           style="height: 105px;max-height: 105px;">{{$speaker->description}}</p>
+                           style="max-height: 105px;">{{$speaker->description}}</p>
                         <a href="{{route('speakers.edit', $speaker)}}" class="btn btn-primary">Edit</a>
                         <a href="#" class="btn btn-danger" onclick="event.preventDefault();document.getElementById('removeSpeakerForm{{$speaker->id}}').submit()">Remove</a>
                         <form action="{{route('speakers.destroy', $speaker)}}"
