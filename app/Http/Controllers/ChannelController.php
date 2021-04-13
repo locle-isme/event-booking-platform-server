@@ -70,7 +70,8 @@ class ChannelController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateChannelRequest $request
+     * @param Event $event
      * @param \App\Channel $channel
      * @return \Illuminate\Http\Response
      */
@@ -79,14 +80,15 @@ class ChannelController extends Controller
         //
         $channel->update($request->validated());
         return redirect()->route('events.show', $event)->with('message', 'Channel successfully updated');
-
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param Event $event
      * @param \App\Channel $channel
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Event $event, Channel $channel)
     {

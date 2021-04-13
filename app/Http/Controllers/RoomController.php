@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use App\Http\Requests\CreateRoomRequest;
+use App\Http\Requests\UpdateRoomRequest;
 use App\Room;
 use Illuminate\Http\Request;
 
@@ -39,15 +40,14 @@ class RoomController extends Controller
     public function store(Event $event, CreateRoomRequest $request)
     {
         //
-        $data = $request->validated();
-        $channel = $event->channels->where('id', $data['channel'])->first();
-        if (!$channel)
-        {
+        $validated = $request->validated();
+        $channel = $event->channels->where('id', $validated['channel'])->first();
+        if (!$channel) {
             return redirect()->back()->withInput()->withErrors(['channel' => 'Channel invalid']);
         }
 
-        unset($data['channel']);
-        $channel->rooms()->create($data);
+        unset($validated['channel']);
+        $channel->rooms()->create($validated);
         return redirect()->route('events.show', $event)->with('message', 'Room successfully created');
     }
 
@@ -65,25 +65,41 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param Event $event
      * @param \App\Room $room
      * @return \Illuminate\Http\Response
      */
-    public function edit(Room $room)
+    public function edit(Event $event, Room $room)
     {
         //
+        return view('rooms.edit', compact('event', 'room'));
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
+     * @param Event $event
      * @param \App\Room $room
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Room $room)
+    public function update(UpdateRoomRequest $request, Event $event, Room $room)
     {
         //
+        $validated = $request->validated();
+        $channel = $event->channels->where('id', $validated['channel'])->first();
+        if (!$channel) {
+            return redirect()->back()->withInput()->withErrors(['channel' => 'Channel invalid']);
+        }
+        $validated['channel_id'] = $channel;
+        unset($validated['channel']);
+        $room->update($validated);
+
+        return redirect()->route('events.show', $event)->with('message', 'Room successfully updated');
+
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -91,8 +107,15 @@ class RoomController extends Controller
      * @param \App\Room $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $room)
+    public function destroy(Event $event,Room $room)
     {
         //
+        $isExist = $room->sessions->count();
+        if ($isExist) {
+            return redirect()->route('events.show', $event)->with('error-message', 'This room is used');
+        }
+
+        $room->delete();
+        return redirect()->route('events.show', $event)->with('message', 'Room successfully deleted');
     }
 }

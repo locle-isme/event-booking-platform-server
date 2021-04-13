@@ -95,10 +95,12 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
-                        <button type="button" class="close" aria-label="Close" onclick="event.preventDefault(); document.getElementById('deleteChannelForm{{$channel->id}}').submit()">
+                        <button type="button" class="close" aria-label="Close"
+                                onclick="event.preventDefault(); document.getElementById('deleteChannelForm{{$channel->id}}').submit()">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <form id="deleteChannelForm{{$channel->id}}" action="{{route('channels.destroy', ['event' => $event, 'channel' => $channel])}}"
+                        <form id="deleteChannelForm{{$channel->id}}"
+                              action="{{route('channels.destroy', ['event' => $event, 'channel' => $channel])}}"
                               method="post">
                             @csrf @method('delete')
                         </form>
@@ -133,14 +135,27 @@
             <tr>
                 <th>Name</th>
                 <th>Capacity</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
 
             @foreach($event->rooms as $room)
                 <tr>
-                    <td>{{$room->name}}</td>
+                    <td><a href="{{route('rooms.edit',['event' => $event, 'room' => $room])}}">{{$room->name}}</a>
+                    </td>
                     <td>{{$room->capacity}}</td>
+                    <td>
+                        <button type="button" class="close" aria-label="Close"
+                                onclick="event.preventDefault(); document.getElementById('deleteRoomForm{{$room->id}}').submit()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <form id="deleteRoomForm{{$room->id}}"
+                              action="{{route('rooms.destroy', ['event' => $event, '$room' => $room])}}"
+                              method="post">
+                            @csrf @method('delete')
+                        </form>
+                    </td>
                 </tr>
             @endforeach
             </tbody>
