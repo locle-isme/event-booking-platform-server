@@ -15,6 +15,7 @@
 
 Route::group(['middleware' => ['auth', 'isAuth']], function () {
     Route::resource('events', 'EventController');
+    Route::resource('speakers', 'SpeakerController');
     Route::resource('events/{event}/tickets', 'TicketController');
     Route::resource('events/{event}/sessions', 'SessionController');
     Route::resource('events/{event}/channels', 'ChannelController');

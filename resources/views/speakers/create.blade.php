@@ -6,108 +6,72 @@
         </div>
     </div>
 
-    <form class="needs-validation" novalidate action="{{route('sessions.store', $event)}}" method="post">
+    <form class="needs-validation" novalidate action="{{route('speakers.store')}}" method="post">
         @csrf
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="selectType">Type</label>
-                <select class="form-control" id="selectType" name="type">
-                    <option value="talk" @if(old('type') == 'talk') selected @endif>Talk</option>
-                    <option value="workshop" @if(old('type') == 'workshop') selected @endif>Workshop</option>
-                </select>
-            </div>
-        </div>
 
-
+<div class="row">
+    <div class="col-sm-12 col-md-6">
         <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputTitle">Title</label>
+            <div class="col-12 col-lg-8 mb-3">
+                <label for="inputName">Name</label>
                 <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control @if($errors->has('title')) is-invalid @endif" id="inputTitle"
-                       name="title" placeholder="" value="{{old('title')}}">
-                @if($errors->has('title'))
+                <input type="text" class="form-control @if($errors->has('name')) is-invalid @endif" id="inputName"
+                       name="name" placeholder="" value="{{old('name')}}">
+                @if($errors->has('name'))
                     <div class="invalid-feedback">
-                        {{$errors->first('title')}}
+                        {{$errors->first('name')}}
                     </div>
                 @endif
             </div>
         </div>
 
         <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputSpeaker">Speaker</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control @if($errors->has('speaker')) is-invalid @endif" id="inputSpeaker"
-                       name="speaker" placeholder="" value="{{old('speaker')}}">
-                @if($errors->has('speaker'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('speaker')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="selectRoom">Room</label>
-                <select class="form-control @if($errors->has('room')) is-invalid @endif" id="selectRoom" name="room">
-                    @foreach($event->rooms as $room)
-                        <option value="{{$room->id}}"
-                                @if(old('room') == $room->id) selected @endif>{{$room->name.'/'.$room->channel->name}}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('room'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('room')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputCost">Cost</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="number" class="form-control @if($errors->has('cost')) is-invalid @endif" id="inputCost"
-                       name="cost" placeholder="" value="{{old('cost') ?? 0}}">
-                @if($errors->has('cost'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('cost')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-6 mb-3">
-                <label for="inputStart">Start</label>
+            <div class="col-12 col-lg-8 mb-3">
+                <label for="inputBirthday">Birthday</label>
                 <input type="text"
-                       class="form-control @if($errors->has('start')) is-invalid @endif"
-                       id="inputStart"
-                       name="start"
-                       placeholder="yyyy-mm-dd HH:MM"
-                       value="{{old('start')}}">
-                @if($errors->has('start'))
+                       class="form-control @if($errors->has('birthday')) is-invalid @endif"
+                       id="inputBirthday"
+                       name="birthday"
+                       placeholder="yyyy-mm-dd"
+                       value="{{old('birthday') }}">
+                @if($errors->has('birthday'))
                     <div class="invalid-feedback">
-                        {{$errors->first('start')}}
-                    </div>
-                @endif
-            </div>
-            <div class="col-12 col-lg-6 mb-3">
-                <label for="inputEnd">End</label>
-                <input type="text"
-                       class="form-control @if($errors->has('end')) is-invalid @endif"
-                       id="inputEnd"
-                       name="end"
-                       placeholder="yyyy-mm-dd HH:MM"
-                       value="{{old('end') }}">
-                @if($errors->has('end'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('end')}}
+                        {{$errors->first('birthday')}}
                     </div>
                 @endif
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-12 col-lg-8 mb-3">
+                <label for="inputSocialLinking">Social linking</label>
+                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
+                <input type="text" class="form-control @if($errors->has('social_linking')) is-invalid @endif"
+                       id="inputSocialLinking"
+                       name="social_linking" placeholder="Example: https://www.facebook.com/LocLe.isme" value="{{old('social_linking')}}" >
+                @if($errors->has('social_linking'))
+                    <div class="invalid-feedback">
+                        {{$errors->first('social_linking')}}
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-lg-8 mb-3">
+                <label for="inputAvatar">Avatar</label>
+                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
+                <input type="file" class="form-control-file @if($errors->has('social_linking')) is-invalid @endif" id="inputAvatar" name="avatar">
+                @if($errors->has('avatar'))
+                    <div class="invalid-feedback">
+                        {{$errors->first('avatar')}}
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="d-sm-block col-md-6"></div>
+</div>
 
         <div class="row">
             <div class="col-12 mb-3">
