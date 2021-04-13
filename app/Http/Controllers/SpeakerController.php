@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Speakers;
+use App\Speaker;
 use Illuminate\Http\Request;
 
 class SpeakerController extends Controller
@@ -41,10 +41,10 @@ class SpeakerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Speakers  $speakers
+     * @param  \App\Speaker  $speaker
      * @return \Illuminate\Http\Response
      */
-    public function show(Speakers $speakers)
+    public function show(Speaker $speaker)
     {
         //
     }
@@ -52,10 +52,10 @@ class SpeakerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Speakers  $speakers
+     * @param  \App\Speaker  $speaker
      * @return \Illuminate\Http\Response
      */
-    public function edit(Speakers $speakers)
+    public function edit(Speaker $speaker)
     {
         //
     }
@@ -64,10 +64,10 @@ class SpeakerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Speakers  $speakers
+     * @param  \App\Speaker  $speaker
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Speakers $speakers)
+    public function update(Request $request, Speaker $speaker)
     {
         //
     }
@@ -75,10 +75,10 @@ class SpeakerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Speakers  $speakers
+     * @param  \App\Speaker  $speaker
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Speakers $speakers)
+    public function destroy(Speaker $speaker)
     {
         //
     }

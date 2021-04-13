@@ -19,4 +19,9 @@ class Session extends Model
     {
         return $this->hasMany(SessionRegistration::class);
     }
+
+    public function sessionSpeakers()
+    {
+        return $this->hasMany(SessionSpeakers::class);
+    }
 }
