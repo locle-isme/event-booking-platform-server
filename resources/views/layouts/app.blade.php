@@ -11,7 +11,7 @@
 
     <!-- Scripts -->
 
-<!-- Fonts -->
+    <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
@@ -50,6 +50,19 @@
                         @endif
                     </div>
                 @endisset
+
+                @if(Route::currentRouteName() == 'speakers.index')
+                    <div
+                        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Manage Speakers</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group mr-2">
+                                <a href="{{route('speakers.create')}}" class="btn btn-sm btn-outline-secondary">Create
+                                    new speaker</a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 @if(session('message'))
                     <div class="mb-3 pt-2">

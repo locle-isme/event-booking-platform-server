@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateSpeakerRequest;
 use App\Speaker;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,6 @@ class SpeakerController extends Controller
      */
     public function create()
     {
-        //
         return view('speakers.create');
     }
 
@@ -36,9 +36,22 @@ class SpeakerController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateSpeakerRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $store_path = 'images\avatar';
+        $full_path = public_path($store_path);
+        $image_path = $this->uploadAvatar($validated['avatar'], $full_path);
+        $validated['avatar'] = $store_path . "\\" . $image_path;
+        Speaker::create($validated);
+        return redirect()->route('speakers.index')->with('message', 'Speaker successfully created');
+    }
+
+    protected function uploadAvatar($imageClass, $full_path)
+    {
+        $image_name = time() . '.' . $imageClass->getClientOriginalExtension();
+        $imageClass->move($full_path, $image_name);
+        return $image_name;
     }
 
     /**
@@ -61,6 +74,7 @@ class SpeakerController extends Controller
     public function edit(Speaker $speaker)
     {
         //
+        return view('speakers.edit', compact('speaker'));
     }
 
     /**

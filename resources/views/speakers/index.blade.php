@@ -1,14 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    <div
-        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Manage Speakers</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-                <a href="{{route('speakers.create')}}" class="btn btn-sm btn-outline-secondary">Create new speaker</a>
-            </div>
-        </div>
-    </div>
 <!--
     <div class="table-responsive">
         <table class="table table-striped">
@@ -39,16 +30,19 @@
     -->
 
     <div class="row">
-        <div class="col-sm-12 col-md-3">
-            <div class="card">
-                <img class="card-img-top" src="https://scr.vn/wp-content/uploads/2020/07/Avt-Anime-c%C3%B4-g%C3%A1i-cute-1024x1024.jpg" alt="Card image" style="width: 100%; height: auto">
-                <div class="card-body">
-                    <h4 class="card-title">John Doe</h4>
-                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
-                    <a href="#" class="btn btn-primary">Edit</a>
-                    <a href="#" class="btn btn-danger">Remove</a>
+        @foreach($speakers as $speaker)
+            <div class="col-sm-12 col-md-3">
+                <div class="card">
+                    <img class="card-img-top" src="{{$speaker->avatar}}" alt="Card image" style="width: 100%; height: auto">
+                    <div class="card-body">
+                        <h4 class="card-title">{{$speaker->name}}</h4>
+                        <p class="card-text">Birthday: {{$speaker->birthday}}</p>
+                        <p class="card-text">{{$speaker->description}}</p>
+                        <a href="{{route('speakers.edit', $speaker)}}" class="btn btn-primary">Edit</a>
+                        <a href="#" class="btn btn-danger">Remove</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
 @endsection
