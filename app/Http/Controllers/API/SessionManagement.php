@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\SpeakerR;
-use App\Speaker;
+use App\Http\Resources\SessionR;
+use App\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class SpeakerManagement extends Controller
+class SessionManagement extends Controller
 {
+    //
     function show($id)
     {
-        $speaker = Speaker::find($id);
-        if (!$speaker)
+        $session = Session::find($id);
+        if (!$session)
         {
             return response()->json(['message' => 'Speaker not found'], 404);
         }
-        return response()->json(new SpeakerR($speaker));
+        return response()->json(new SessionR($session));
     }
 }

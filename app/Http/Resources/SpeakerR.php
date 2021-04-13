@@ -18,6 +18,12 @@ class SpeakerR extends JsonResource
         //dd($this->resource);
         $speaker = $this->resource;
         $speaker->avatar = url('/').'\\'.$speaker->avatar;
-        return $speaker;
+        $speaker['session_joined'] = $this->sessionSpeakers->map(function ($sessionSpeaker){
+            $end_point = collect($sessionSpeaker->session);
+            $end_point['organizer_slug'] = $sessionSpeaker->session->room->channel->event->organizer->slug;
+            $end_point['event_slug'] = $sessionSpeaker->session->room->channel->event->slug;
+            return $end_point;
+        });
+        return collect($speaker)->except('session_speakers');
     }
 }

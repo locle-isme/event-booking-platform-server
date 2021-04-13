@@ -24,7 +24,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cors']], function () {
 //    route::get('/register', 'API\AttendeeManagement@register');
     route::get('/logout', 'API\AttendeeManagement@logout');
 
-    route::get('/speakers/{id}', 'API\SpeakerManagement@detail');
+    route::get('/speakers/{id}', 'API\SpeakerManagement@show');
+    route::get('/sessions/{id}', 'API\SessionManagement@show');
 });
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {

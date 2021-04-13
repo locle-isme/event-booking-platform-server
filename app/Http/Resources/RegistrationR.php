@@ -16,6 +16,8 @@ class RegistrationR extends JsonResource
     {
         $response = [
             'event' => new EventR($this->ticket->event),
+            'registration_time' => $this->registration_time,
+            'ticket' => new TicketR($this->ticket),
             'session_ids' => $this->sessionRegistrations->map(function ($sr) {
                 return $sr->session_id;
             })
