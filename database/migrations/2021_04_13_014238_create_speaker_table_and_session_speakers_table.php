@@ -16,6 +16,7 @@ class CreateSpeakerTableAndSessionSpeakersTable extends Migration
         Schema::create('speakers', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
             $table->string('name', 50);
+            $table->date('birthday');
             $table->string('avatar');
             $table->string('social_linking', 200);
             $table->string('description');
@@ -40,7 +41,7 @@ class CreateSpeakerTableAndSessionSpeakersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('speakers');
         Schema::dropIfExists('session_speakers');
+        Schema::dropIfExists('speakers');
     }
 }
