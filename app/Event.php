@@ -34,4 +34,8 @@ class Event extends Model
     {
         return $this->hasManyThrough(Room::class,Channel::class);
     }
+
+    public function isAvailable(){
+        return $this->date > date('Y-m-d');
+    }
 }

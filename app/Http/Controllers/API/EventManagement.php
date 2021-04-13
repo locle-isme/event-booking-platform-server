@@ -50,7 +50,7 @@ class EventManagement extends Controller
         }
 
         $ticket = Ticket::find($request->ticket_id);
-        if ($ticket && $ticket->getAvailable()) {
+        if ($ticket && $ticket->isAvailable() && $ticket->event->isAvailable()) {
             $isRegistered = $ticket->event->registrations->where('attendee_id', $attendee->id)->count();
             if ($isRegistered > 0) {
                 return response()->json(['message' => 'User already registered'], 401);

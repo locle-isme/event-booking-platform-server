@@ -141,3 +141,8 @@ main {
     -webkit-line-clamp: 5;
     overflow: hidden;
 }
+
+
+a{
+    text-decoration: none !important;
+}

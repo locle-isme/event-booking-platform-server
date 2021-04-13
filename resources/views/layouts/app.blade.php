@@ -72,6 +72,14 @@
                     </div>
                 @endif
 
+                    @if(session('error-message'))
+                        <div class="mb-3 pt-2">
+                            <div class="alert alert-danger">
+                                {{session('error-message')}}
+                            </div>
+                        </div>
+                    @endif
+
                 @yield('content')
             </main>
         </div>

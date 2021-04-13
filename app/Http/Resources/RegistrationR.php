@@ -7,6 +7,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class RegistrationR extends JsonResource
 {
     /**
+     * @var mixed
+     */
+
+    /**
      * Transform the resource into an array.
      *
      * @param \Illuminate\Http\Request $request
@@ -14,7 +18,7 @@ class RegistrationR extends JsonResource
      */
     public function toArray($request)
     {
-        $response = [
+        return [
             'event' => new EventR($this->ticket->event),
             'registration_time' => $this->registration_time,
             'ticket' => new TicketR($this->ticket),
@@ -22,6 +26,5 @@ class RegistrationR extends JsonResource
                 return $sr->session_id;
             })
         ];
-        return $response;
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateSpeakerRequest;
 use App\Speaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Mockery\Exception;
 
 class SpeakerController extends Controller
 {
@@ -110,9 +111,15 @@ class SpeakerController extends Controller
     public function destroy(Speaker $speaker)
     {
         //
-        File::delete($speaker->avatar);
+        $isExist = $speaker->sessionSpeakers()->count();
+        if ($isExist) {
+            return redirect()->route('speakers.index')->with('error-message', 'This speaker is used');
+        }
+
         $speaker->delete();
+        File::delete($speaker->avatar);
         return redirect()->route('speakers.index')->with('message', 'Speaker successfully deleted');
+
 
     }
 }

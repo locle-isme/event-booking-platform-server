@@ -17,7 +17,7 @@ class TicketR extends JsonResource
         $response = collect($this->resource)->only('id', 'name', 'cost');
         $response['cost'] = (int)$response['cost'];
         $response['description'] = $this->getDescription();
-        $response['available'] = $this->getAvailable();
+        $response['available'] = $this->isAvailable();
         return $response;
     }
 }

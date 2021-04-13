@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Event;
 use App\Http\Requests\CreateChannelRequest;
+use App\Http\Requests\UpdateChannelRequest;
 use Illuminate\Http\Request;
 
 class ChannelController extends Controller
@@ -61,9 +62,9 @@ class ChannelController extends Controller
      * @param \App\Channel $channel
      * @return \Illuminate\Http\Response
      */
-    public function edit(Channel $channel)
+    public function edit(Event $event, Channel $channel)
     {
-        //
+        return view('channels.edit', compact('event', 'channel'));
     }
 
     /**
@@ -73,9 +74,12 @@ class ChannelController extends Controller
      * @param \App\Channel $channel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Channel $channel)
+    public function update(UpdateChannelRequest $request, Event $event, Channel $channel)
     {
         //
+        $channel->update($request->validated());
+        return redirect()->route('events.show', $event)->with('message', 'Channel successfully updated');
+
     }
 
     /**
@@ -84,8 +88,15 @@ class ChannelController extends Controller
      * @param \App\Channel $channel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Channel $channel)
+    public function destroy(Event $event, Channel $channel)
     {
         //
+        $isExist = $channel->rooms->count();
+        if ($isExist) {
+            return redirect()->route('events.show', $event)->with('error-message', 'This channel is used');
+        }
+
+        $channel->delete();
+        return redirect()->route('events.show', $event)->with('message', 'Channel successfully deleted');
     }
 }

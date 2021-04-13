@@ -95,7 +95,16 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">{{$channel->name}}</h5>
+                        <button type="button" class="close" aria-label="Close" onclick="event.preventDefault(); document.getElementById('deleteChannelForm{{$channel->id}}').submit()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <form id="deleteChannelForm{{$channel->id}}" action="{{route('channels.destroy', ['event' => $event, 'channel' => $channel])}}"
+                              method="post">
+                            @csrf @method('delete')
+                        </form>
+                        <h5 class="card-title"><a
+                                href="{{route('channels.edit', ['event' => $event, 'channel' => $channel])}}">{{$channel->name}}</a>
+                        </h5>
                         <p class="card-text">{{$channel->sessions->count()}} sessions, {{$channel->rooms->count()}}
                             room</p>
                     </div>

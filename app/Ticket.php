@@ -48,7 +48,7 @@ class Ticket extends Model
         return null;
     }
 
-    public function getAvailable()
+    public function isAvailable()
     {
         $result = $this->getSV();
         if ($result) {
