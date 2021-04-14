@@ -25,7 +25,7 @@ class Ticket extends Model
 
 
 
-    protected function getSV()
+    public function getSV()
     {
         return json_decode($this->special_validity);
     }

@@ -20,9 +20,18 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">{{$ticket->name}}</h5>
+                        <button type="button" class="close" aria-label="Close"
+                                onclick="event.preventDefault(); document.getElementById('deleteTicketForm{{$ticket->id}}').submit()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h5 class="card-title"><a href="{{route('tickets.edit', ['event' => $event, 'ticket' => $ticket])}}">{{$ticket->name}}</a></h5>
                         <p class="card-text">{{$ticket->cost}}.-</p>
                         <p class="card-text">{{$ticket->getDescription()}}</p>
+                        <form id="deleteTicketForm{{$ticket->id}}"
+                              action="{{route('tickets.destroy', ['event' => $event, 'ticket' => $ticket])}}"
+                              method="post">
+                            @csrf @method('delete')
+                        </form>
                     </div>
                 </div>
             </div>
