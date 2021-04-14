@@ -54,6 +54,7 @@
                 <th class="w-100">Title</th>
                 <th>Speakers</th>
                 <th>Channel</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -68,6 +69,17 @@
                         {{$session->speakers}}
                     </td>
                     <td class="text-nowrap">{{$session->channel_room}}</td>
+                    <td>
+                        <button type="button" class="close" aria-label="Close"
+                                onclick="event.preventDefault(); document.getElementById('deleteSessionForm{{$session->id}}').submit()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <form id="deleteSessionForm{{$session->id}}"
+                              action="{{route('sessions.destroy', ['event' => $event, 'session' => $session])}}"
+                              method="post">
+                            @csrf @method('delete')
+                        </form>
+                    </td>
                 </tr>
             @endforeach
 
@@ -151,7 +163,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <form id="deleteRoomForm{{$room->id}}"
-                              action="{{route('rooms.destroy', ['event' => $event, '$room' => $room])}}"
+                              action="{{route('rooms.destroy', ['event' => $event, 'room' => $room])}}"
                               method="post">
                             @csrf @method('delete')
                         </form>

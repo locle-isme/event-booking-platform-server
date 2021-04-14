@@ -148,11 +148,24 @@ class SessionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Event $event
      * @param \App\Session $session
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Session $session)
+    public function destroy(Event $event, Session $session)
     {
         //
+        $isExist = $session->sessionRegistrations->count();
+        if ($isExist) {
+            return redirect()->route('events.show', $event)->with('error-message', 'This session is used');
+        }
+
+
+        foreach ($session->sessionSpeakers as $sessionSpeaker) {
+            $sessionSpeaker->delete();
+        }
+
+        $session->delete();
+        return redirect()->route('events.show', $event)->with('message', 'Session successfully deleted');
     }
 }
