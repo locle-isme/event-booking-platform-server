@@ -36,6 +36,6 @@ class Event extends Model
     }
 
     public function isAvailable(){
-        return $this->date > date('Y-m-d');
+        return $this->date > date('Y-m-d') || $this->active == 1;
     }
 }

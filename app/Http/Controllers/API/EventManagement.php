@@ -19,7 +19,7 @@ class EventManagement extends Controller
 
     public function index()
     {
-        $events = Event::whereRaw('date > CURDATE()')->orderBy('date')->get();
+        $events = Event::whereRaw('date > CURDATE()')->where('active', 1)->orderBy('date')->get();
 //        dd($events);
 //        $events = Event::all();
         return response()->json(['events' => EventR::collection($events)]);
@@ -36,6 +36,10 @@ class EventManagement extends Controller
 
         if (!$event) {
             return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        if (!$event->active) {
+            return response()->json(['message' => 'Event not ready'], 419);
         }
 
         return response()->json(new EventDetailR($event));
