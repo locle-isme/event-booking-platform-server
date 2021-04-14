@@ -41,6 +41,8 @@ class EventController extends Controller
      */
     public function store(CreateEventRequest $request)
     {
+        $validated = $request->validated();
+        $validated['active'] = $request->active == null ? 0 : 1;
         $event = Auth::user()->events()->create($request->validated());
         return redirect()->route('events.show', $event)->with('message', 'Event successfully created');
     }
@@ -80,6 +82,7 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         //
+        //dd($event);
         return view('events.edit', compact('event'));
     }
 
@@ -93,7 +96,13 @@ class EventController extends Controller
     public function update(UpdateEventRequest $request, Event $event)
     {
         //
-        $event->update($request->validated());
+        $validated = $request->validated();
+        $validated['active'] = $request->active == null ? 0 : 1;
+        $isExist = $event->registrations()->count();
+        if ($isExist && $validated['active'] == 0) {
+            return redirect()->route('events.show', $event)->with('error-message', 'This event is used');
+        }
+        $event->update($validated);
         return redirect()->route('events.show', $event)->with('message', 'Event successfully updated');
     }
 

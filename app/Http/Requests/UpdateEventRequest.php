@@ -27,6 +27,7 @@ class UpdateEventRequest extends FormRequest
     {
         $event = $this->route('event');
         return [
+            //'active' => 'accepted',
             'name' => 'required',
             'slug' => [
                 'required',

@@ -26,6 +26,7 @@ class CreateEventRequest extends FormRequest
     public function rules()
     {
         return [
+            //'active' => 'accepted',
             'name' => 'required',
             'slug' => [
                 'required',
