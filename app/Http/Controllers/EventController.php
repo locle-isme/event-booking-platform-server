@@ -106,5 +106,15 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         //
+        $isExist1 = $event->tickets()->count();
+        $isExist2 = $event->channels()->count();
+        //dd($isExist1, $isExist2);
+        if ($isExist1 && $isExist2) {
+            return redirect()->route('events.show', $event)->with('error-message', 'This event is used');
+        }
+
+        $event->delete();
+        return redirect()->route('events.index')->with('message', 'Event successfully deleted');
+
     }
 }

@@ -16,6 +16,15 @@
                 <div class="card mb-4 shadow-sm">
                     <a href="{{route('events.show', [$e->id])}}" class="btn text-left event">
                         <div class="card-body">
+                            <button type="button" class="close" aria-label="Close"
+                                    onclick="event.preventDefault(); document.getElementById('deleteEventForm{{$e->id}}').submit()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <form id="deleteEventForm{{$e->id}}"
+                                  action="{{route('events.destroy', ['event' => $e])}}"
+                                  method="post">
+                                @csrf @method('delete')
+                            </form>
                             <h5 class="card-title">{{$e->name}}</h5>
                             <p class="card-subtitle">{{$e->date}}</p>
                             <hr>
