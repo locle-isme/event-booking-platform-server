@@ -92,8 +92,9 @@ class RoomController extends Controller
         if (!$channel) {
             return redirect()->back()->withInput()->withErrors(['channel' => 'Channel invalid']);
         }
-        $validated['channel_id'] = $channel;
+        $validated['channel_id'] = $channel->id;
         unset($validated['channel']);
+        //dd($validated);
         $room->update($validated);
 
         return redirect()->route('events.show', $event)->with('message', 'Room successfully updated');

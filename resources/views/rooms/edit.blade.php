@@ -9,6 +9,7 @@
 
     <form class="needs-validation" novalidate action="{{route('rooms.update',['event' => $event, 'room' => $room])}}" method="post">
         @csrf
+        @method('put')
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputName">Name</label>
