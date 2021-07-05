@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPasswordColumnIntoAttendeeTable extends Migration
+class DropColumnSpeakerIntoSessions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddPasswordColumnIntoAttendeeTable extends Migration
      */
     public function up()
     {
-        Schema::table('attendees', function (Blueprint $table) {
-            $table->string('password')->after('username');
+        //
+        Schema::table('sessions', function (Blueprint $table) {
+            $table->dropColumn('speaker');
         });
     }
 
@@ -25,9 +26,12 @@ class AddPasswordColumnIntoAttendeeTable extends Migration
      */
     public function down()
     {
-        Schema::table('attendees', function (Blueprint $table) {
-            //
-            $table->dropColumn('password');
+        //
+
+        Schema::table('sessions', function (Blueprint $table) {
+            $table->string('speaker');
         });
+
+
     }
 }
