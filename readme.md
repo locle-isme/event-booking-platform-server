@@ -1,5 +1,5 @@
 # Web Technologies Events Management - For Organizer
-
+![](https://i.imgur.com/79ehH5u.png)
 # About
 
 Web application helping them to manage the events and allowing attendees to sign up and see all information they need.
