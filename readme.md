@@ -14,9 +14,9 @@ https://github.com/locle-isme/event-booking-platform-client
 * [XAMPP](https://www.apachefriends.org/download.html)
 * [COMPOSER](https://getcomposer.org/download/)
 
-## BUILDING Open terminal source project.
+## BUILDING 
 
-Run:
+Open terminal of path source project. Run:
 
 ```bash
 composer install
