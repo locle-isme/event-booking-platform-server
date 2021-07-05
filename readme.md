@@ -1,9 +1,12 @@
+#Event booking platform server (For Organizer)
+
 # About
 
 Web application helping them to manage the events and allowing attendees to sign up and see all information they need.
 
 ## Extension Application
-###[Web Technologies Events Management - Client](https://github.com/locle-isme/event-booking-platform-client)
+### Web Technologies Events Management - Client 
+https://github.com/locle-isme/event-booking-platform-client
 ## Prerequisites
 
 * PHP 7.x
