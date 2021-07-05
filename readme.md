@@ -1,11 +1,11 @@
-#Event booking platform server (For Organizer)
+# ### Web Technologies Events Management - For Organizer
 
 # About
 
 Web application helping them to manage the events and allowing attendees to sign up and see all information they need.
 
 ## Extension Application
-### Web Technologies Events Management - Client 
+### Web Technologies Events Management - For Attendee
 https://github.com/locle-isme/event-booking-platform-client
 ## Prerequisites
 
