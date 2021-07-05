@@ -1,4 +1,4 @@
-# ### Web Technologies Events Management - For Organizer
+# Web Technologies Events Management - For Organizer
 
 # About
 
