@@ -8,7 +8,7 @@
                     <h1 class="h2">WorldSkills Event Platform</h1>
                 </div>
                 @if($errors->has('email') || $errors->has('password'))
-                <div class="pt-3 pb-2 mb-3 text-center">
+                <div class="text-center">
                     <div class="alert alert-danger">
                         Email or password not correct
                     </div>

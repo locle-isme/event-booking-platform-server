@@ -26,7 +26,7 @@
                         </button>
                         <h5 class="card-title"><a href="{{route('tickets.edit', ['event' => $event, 'ticket' => $ticket])}}">{{$ticket->name}}</a></h5>
                         <p class="card-text">{{$ticket->cost}}.-</p>
-                        <p class="card-text">{{$ticket->getDescription()}}</p>
+                        <p class="card-text">{{$ticket->description}}</p>
                         <form id="deleteTicketForm{{$ticket->id}}"
                               action="{{route('tickets.destroy', ['event' => $event, 'ticket' => $ticket])}}"
                               method="post">

@@ -10,90 +10,14 @@
           action="{{route('tickets.update', ['event' => $event, 'ticket' => $ticket])}}" method="post">
         @csrf
         @method('put')
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputName">Name</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control @if($errors->has('name')) is-invalid @endif" id="inputName"
-                       name="name" placeholder="" value="{{old('name') ?? $ticket->name }}">
-                @if($errors->has('name'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('name')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputCost">Cost</label>
-                <input type="number" class="form-control @if($errors->has('cost')) is-invalid @endif" id="inputCost"
-                       name="cost" placeholder="" value="{{old('cost') ?? $ticket->cost }}">
-                @if($errors->has('cost'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('cost')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="selectSpecialValidity">Special Validity</label>
-                <select class="form-control @if($errors->has('special_validity')) is-invalid @endif"
-                        id="selectSpecialValidity"
-                        name="special_validity">
-                    <option value="">None</option>
-                    <option value="amount"
-                            @if(old('special_validity') == 'amount' || $ticket->special_validity_type == 'amount') selected @endif>
-                        Limited amount
-                    </option>
-                    <option value="date"
-                            @if(old('special_validity') == 'date' || $ticket->special_validity_type == 'date') selected @endif>
-                        Purchaseable till date
-                    </option>
-                </select>
-                @if($errors->has('special_validity'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('special_validity')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputAmount">Maximum amount of tickets to be sold</label>
-                <input type="number" class="form-control @if($errors->has('amount')) is-invalid @endif" id="inputAmount"
-                       name="amount" placeholder="" value="{{old('amount')  ?? $ticket->amount}}">
-                @if($errors->has('amount'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('amount')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputValidTill">Tickets can be sold until</label>
-                <input type="text"
-                       class="form-control @if($errors->has('date')) is-invalid @endif"
-                       id="inputValidTill"
-                       name="date"
-                       placeholder="yyyy-mm-dd HH:MM"
-                       value="{{old('date') ?? $ticket->date}}">
-                @if($errors->has('date'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('date')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
+        @include('components.inputs.text',[ 'label' => 'Name', 'name' => config('constants.ticket.name'), 'value' => $ticket->{config('constants.ticket.name')} ])
+        @include('components.inputs.text',[ 'label' => 'Cost', 'name' => config('constants.ticket.cost'), 'type' => 'number', 'value' => $ticket->{config('constants.ticket.cost')}, ])
+        @include('components.inputs.select',[ 'label' => 'Special Validity', 'name' => config('constants.ticket.special_validity'), 'data' => config('constants.ticket.special_validity_data'), 'value' => $ticket->{config('constants.ticket.special_validity')}, ])
+        @include('components.inputs.text',[ 'label' => 'Maximum amount of tickets to be sold', 'name' => config('constants.ticket.amount'), 'type' => 'number', 'value' => $ticket->{config('constants.ticket.amount')}, ])
+        @include('components.inputs.text',[ 'label' => 'Tickets can be sold until', 'name' => config('constants.ticket.date'), 'type' => 'date', 'placeholder' => 'yyyy-mm-dd HH:MM', 'value' => $ticket->{config('constants.ticket.date')}, ])
         <hr class="mb-4">
         <button class="btn btn-primary" type="submit">Save ticket</button>
-        <a href="events/detail.html" class="btn btn-link">Cancel</a>
+        <a href="#" class="btn btn-link">Cancel</a>
     </form>
 
 @endsection

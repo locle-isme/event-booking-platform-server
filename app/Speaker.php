@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Speaker extends Model
 {
-    //
     protected $guarded = [];
     public $timestamps = false;
 

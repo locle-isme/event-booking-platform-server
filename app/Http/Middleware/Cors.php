@@ -16,8 +16,8 @@ class Cors
     public function handle($request, Closure $next)
     {
         return $next($request)
-//            ->header('Content-Type', 'application/json')
-            ->header('Access-Control-Allow-Origin', '*') //REPLACE STAR WITH YOUR URL
+            ->header('Content-Type', 'application/json')
+            ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', '*')
             ->header('Access-Control-Allow-Headers', '*');
     }

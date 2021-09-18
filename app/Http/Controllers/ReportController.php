@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    //
     public function index(Event $event)
     {
         $event->sessions = $event->rooms->map(function ($room) {

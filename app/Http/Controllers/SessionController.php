@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use App\Http\Requests\CreateSessionRequest;
+use App\Http\Requests\Session\StoreRequest;
 use App\Http\Requests\UpdateSessionRequest;
 use App\Session;
 use App\SessionSpeaker;
@@ -12,53 +13,35 @@ use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Event $event)
     {
-        //
         $speakers = Speaker::all();
-        return view('sessions.create', compact('event', 'speakers'));
+        $newListSpeakers = [];
+        foreach ($speakers as $speaker) {
+            $newListSpeakers[$speaker->id] = $speaker->name;
+        }
+        $speakers = $newListSpeakers;
+        $rooms = [];
+        foreach ($event->rooms as $room) {
+            $rooms[$room->id] = $room->channel->name . ' / ' . $room->name;
+        }
+        return view('sessions.create', compact('event', 'speakers', 'rooms'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Event $event, CreateSessionRequest $request)
+    public function store(StoreRequest $request, Event $event)
     {
-        //
         $data = $request->validated();
         $room = $event->rooms->where('id', $data['room'])->first();
         if (!$room) {
             return redirect()->back()->withInput()->withErrors(['room' => 'Room invalid']);
         }
 
-        //check room available
         $isRoomAvailable = $room->sessions->every(function ($s) use ($data) {
             return $data['end'] < $s['start'] || $data['start'] > $s['end'];
         });
-
         if (!$isRoomAvailable) {
             return redirect()->back()->withInput()->withErrors(['room' => 'Room Room already booked during this time']);
         }
-
-
         $speakers = $data['speakers'];
         unset($data['room'], $data['speakers']);
         $session = $room->sessions()->create($data);
@@ -71,46 +54,30 @@ class SessionController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Session $session
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Session $session)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Session $session
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Event $event, Session $session)
     {
-        //
         $session->start = date('Y-m-d H:i', strtotime($session->start));
         $session->end = date('Y-m-d H:i', strtotime($session->end));
         $speakers = Speaker::all();
-        $session->sessionSpeakers = $session->sessionSpeakers->map(function ($sessionSpeaker) {
-            return $sessionSpeaker->speaker_id;
+        $newListSpeakers = [];
+        foreach ($speakers as $speaker) {
+            $newListSpeakers[$speaker->id] = $speaker->name;
+        }
+        $speakers = $newListSpeakers;
+        $rooms = [];
+        foreach ($event->rooms as $room) {
+            $rooms[$room->id] = $room->channel->name . ' / ' . $room->name;
+        }
+        $sessionSpeakers = $session->sessionSpeakers->map(function ($s){
+            $speaker = $s->speaker;
+            return $speaker->id;
         })->toArray();
-        //dd($session->sessionSpeakers);
-        return view('sessions.edit', compact('event', 'session', 'speakers'));
+        $session->room = $session->room->id;
+        return view('sessions.edit', compact('event', 'session', 'speakers','rooms','sessionSpeakers'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Session $session
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateSessionRequest $request, Event $event, Session $session)
+    public function update(StoreRequest $request, Event $event, Session $session)
     {
-
         $data = $request->validated();
         $room = $event->rooms->where('id', $data['room'])->first();
         if (!$room) {
@@ -129,42 +96,28 @@ class SessionController extends Controller
         $speakers = $data['speakers'];
         unset($data['room'], $data['speakers']);
         $session->update($data);
-
         //remove all old records of session speakers
         foreach ($session->sessionSpeakers as $sessionSpeaker) {
             $sessionSpeaker->delete();
         }
-
         //add new records into session speakers
         foreach ($speakers as $speaker) {
             $session->sessionSpeakers()->create(
                 ['speaker_id' => $speaker]
             );
         }
-
         return redirect()->route('events.show', $event)->with('message', 'Session successfully updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Event $event
-     * @param \App\Session $session
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Event $event, Session $session)
     {
-        //
         $isExist = $session->sessionRegistrations->count();
         if ($isExist) {
             return redirect()->route('events.show', $event)->with('error-message', 'This session is used');
         }
-
-
         foreach ($session->sessionSpeakers as $sessionSpeaker) {
             $sessionSpeaker->delete();
         }
-
         $session->delete();
         return redirect()->route('events.show', $event)->with('message', 'Session successfully deleted');
     }

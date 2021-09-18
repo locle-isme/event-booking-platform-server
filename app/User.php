@@ -28,10 +28,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
     public function getAuthPassword()
     {
         return $this->password_hash;
     }
-
 }

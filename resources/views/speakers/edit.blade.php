@@ -6,83 +6,15 @@
         </div>
     </div>
 
-    <form class="needs-validation" enctype="multipart/form-data" novalidate action="{{route('speakers.update', $speaker)}}" method="post">
+    <form class="needs-validation" enctype="multipart/form-data" novalidate
+          action="{{route('speakers.update', $speaker)}}" method="post">
         @csrf
         @method('put')
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputName">Name</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control @if($errors->has('name')) is-invalid @endif" id="inputName"
-                       name="name" placeholder="" value="{{old('name') ?? $speaker->name}}">
-                @if($errors->has('name'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('name')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputBirthday">Birthday</label>
-                <input type="text"
-                       class="form-control @if($errors->has('birthday')) is-invalid @endif"
-                       id="inputBirthday"
-                       name="birthday"
-                       placeholder="yyyy-mm-dd"
-                       value="{{old('birthday') ?? $speaker->birthday }}">
-                @if($errors->has('birthday'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('birthday')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputSocialLinking">Social linking</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control @if($errors->has('social_linking')) is-invalid @endif"
-                       id="inputSocialLinking"
-                       name="social_linking" placeholder="Example: https://www.facebook.com/LocLe.isme"
-                       value="{{old('social_linking')  ?? $speaker->social_linking }}" >
-                @if($errors->has('social_linking'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('social_linking')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputAvatar">Avatar</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="file" class="form-control-file @if($errors->has('avatar')) is-invalid @endif" id="inputAvatar" name="avatar">
-                @if($errors->has('avatar'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('avatar')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 mb-3">
-                <label for="textareaDescription">Description</label>
-                <textarea class="form-control @if($errors->has('description')) is-invalid @endif"
-                          id="textareaDescription" name="description" placeholder=""
-                          rows="5">{{old('description') ?? $speaker->description }}</textarea>
-                @if($errors->has('description'))
-                    <div class="invalid-feedback">
-                        {{$errors->first('description')}}
-                    </div>
-                @endif
-            </div>
-        </div>
-
+        @include('components.inputs.text',[ 'label' => 'Name', 'name' => config('constants.speaker.name'), 'value' => $speaker->{config('constants.speaker.name')}, ])
+        @include('components.inputs.text',[ 'label' => 'Birthday', 'name' => config('constants.speaker.birthday'), 'placeholder' => 'yyyy-mm-dd', 'value' => $speaker->{config('constants.speaker.birthday')}, ])
+        @include('components.inputs.text',[ 'label' => 'Social linking', 'name' => config('constants.speaker.social_linking'), 'placeholder' => 'Example: https://www.facebook.com/LocLe.isme', 'value' => $speaker->{config('constants.speaker.social_linking')}, ])
+        @include('components.inputs.text',[ 'label' => 'Avatar', 'name' => config('constants.speaker.avatar'), 'type' => 'file', 'class' => 'form-control-file', ])
+        @include('components.inputs.textarea',[ 'label' => 'Description', 'name' => config('constants.speaker.description'), 'colLeft' => 12, 'placeholder' => 'Write something about you . . .', 'value' => $speaker->{config('constants.speaker.description')}, ])
         <hr class="mb-4">
         <button class="btn btn-primary" type="submit">Save session</button>
         <a href="events/detail.html" class="btn btn-link">Cancel</a>
