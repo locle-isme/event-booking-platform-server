@@ -19,4 +19,11 @@ class Room extends Model
     {
         return $this->hasMany(Session::class);
     }
+
+    public function getNewFormatSessions()
+    {
+        return $this->getAttribute('sessions')->map(function (Session $session) {
+            return $session->getNewFormat();
+        });
+    }
 }
