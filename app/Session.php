@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Session extends Model
 {
     protected $guarded = [];
+    protected $table = 'sessions';
     public $timestamps = false;
 
     public function room()

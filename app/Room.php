@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     protected $guarded = [];
+    protected $table = 'rooms';
     public $timestamps = false;
 
     public function channel()

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     protected $guarded = [];
+    protected $table = 'channels';
     public $timestamps = false;
 
     public function event()
