@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
 {
-    protected $table = "event_tickets";
     protected $guarded = [];
+    protected $table = 'event_tickets';
     public $timestamps = false;
 
     public function event()
@@ -22,27 +22,45 @@ class Ticket extends Model
 
     public function getSV()
     {
-        return json_decode($this->special_validity, true);
+        try {
+            $sv = $this->getAttribute('special_validity');
+            if (empty($sv)) {
+                return [];
+            }
+            return json_decode($this->getAttribute('special_validity'), true);
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 
-    public function getDescriptionAttribute()
+    public function getDescriptionAttribute(): ?string
     {
         $result = $this->getSV();
         if (!$result) return null;
         if ($result['type'] == 'date') {
-            return "Available until " . date('F j, Y', strtotime($result['date']));
+            $dateTime = date('F j, Y', strtotime($result['date']));
+            return "Available until $dateTime";
         }
         if ($result['type'] == 'amount') {
-            return $result['amount'] . " tickets available";
+            $amount = $result['amount'];
+            return "$amount tickets available";
         }
         return null;
     }
 
-    public function isAvailable()
+    public function isAvailable(): bool
     {
-        $result = $this->getSV();
-        if (!$result) return true;
-        if ($result['type'] == 'amount' && $this->registrations()->count() >= $result['amount']) return false;
-        if ($result['type'] == 'date' && $result['date'] < date('Y-m-d')) return false;
+        $result = @$this->getSV();
+        if (empty($result)) {
+            return true;
+        }
+        $registerCount = $this->registrations()->count();
+        if ($result['type'] == 'amount' && $registerCount >= $result['amount']) {
+            return false;
+        }
+        if ($result['type'] == 'date' && $result['date'] < date('Y-m-d')) {
+            return false;
+        }
+        return true;
     }
 }
