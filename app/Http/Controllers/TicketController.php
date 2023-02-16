@@ -40,7 +40,8 @@ class TicketController extends Controller
         $ticket->special_validity = @$specialValidity['type'];
         $specialValidityVal = @$specialValidity['type'];
         $specialValidityData = ['' => 'None'] + config('constants.common.special_validity_data');
-        $ticket->amount = @$specialValidity['amount'] ?: 0;
+        $amount = @$specialValidity['amount'];
+        $ticket->amount = is_numeric($amount) ? $amount : null;
         $ticket->date = @$specialValidity['date'];
         return view('tickets.edit', [
             'event' => $event,
@@ -77,15 +78,19 @@ class TicketController extends Controller
         }
     }
 
-    private function formatSpecialValidity($validated)
+    private function formatSpecialValidity($data)
     {
-        if (empty($validated['special_validity'])) return null;
-        $specialValidity = $validated['special_validity'];
-        if (!in_array($specialValidity, ['date', 'amount'])) return null;
-        $data = [
+        if (empty($data['special_validity'])) {
+            return null;
+        }
+        $specialValidity = @$data['special_validity'];
+        if (!in_array($specialValidity, ['date', 'amount'])) {
+            return null;
+        }
+        $result = [
             'type' => $specialValidity,
-            $specialValidity => $validated[$specialValidity]
+            $specialValidity => $data[$specialValidity]
         ];
-        return json_encode($data);
+        return json_encode($result);
     }
 }

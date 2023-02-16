@@ -32,8 +32,7 @@
         @include('components.inputs.text', [
             'label' => 'Tickets can be sold until',
             'name' => 'date',
-            'type' => 'date',
-            'placeholder' => 'yyyy-mm-dd HH:MM',
+            'placeholder' => 'Y-m-d',
         ])
         <hr class="mb-4">
         <button class="btn btn-primary" type="submit">Save ticket</button>

@@ -35,8 +35,7 @@
         @include('components.inputs.text', [
             'label' => 'Tickets can be sold until',
             'name' => 'date',
-            'type' => 'date',
-            'placeholder' => 'yyyy-mm-dd HH:MM',
+            'placeholder' => 'Y-m-d',
             'value' => $ticket->getAttribute('date'),
         ])
         <hr class="mb-4">
