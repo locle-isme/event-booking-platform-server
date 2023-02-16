@@ -5,14 +5,17 @@
             <h2 class="h4">Edit channel</h2>
         </div>
     </div>
-
-    <form class="needs-validation" novalidate action="{{route('channels.update', ['event' => $event, 'channel' => $channel])}}" method="post">
+    <form class="needs-validation" novalidate
+          action="{{route('channels.update', ['event' => $event, 'channel' => $channel])}}" method="post">
         @csrf
-        @method('put')
-        @include('components.inputs.text',[ 'label' => 'Name', 'name' => config('constants.channel.name'), 'value' => $channel->{config('constants.channel.name')}, ])
+        @method('PUT')
+        @include('components.inputs.text', [
+            'label' => 'Name',
+            'name' => 'name',
+            'value' => $channel->name,
+        ])
         <hr class="mb-4">
         <button class="btn btn-primary" type="submit">Save channel</button>
         <a href="#" class="btn btn-link">Cancel</a>
     </form>
-
 @endsection

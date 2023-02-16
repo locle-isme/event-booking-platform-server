@@ -8,7 +8,11 @@
 
     <form class="needs-validation" novalidate action="{{route('channels.store', $event)}}" method="post">
         @csrf
-        @include('components.inputs.text',[ 'label' => 'Name', 'name' => config('constants.channel.name') ])
+        @include('components.inputs.text', [
+            'label' => 'Name',
+            'name' => 'name',
+        ])
+        <hr class="mb-4">
         <hr class="mb-4">
         <button class="btn btn-primary" type="submit">Save channel</button>
         <a href="#" class="btn btn-link">Cancel</a>
