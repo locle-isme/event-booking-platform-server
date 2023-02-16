@@ -13,57 +13,84 @@ class TicketController extends Controller
 {
     public function create(Event $event)
     {
-        return view('tickets.create', compact('event'));
+        $specialValidityData = ['' => 'None'] + config('constants.common.special_validity_data');
+        return view('tickets.create', [
+            'event' => $event,
+            'specialValidityData' => $specialValidityData
+        ]);
     }
 
     public function store(StoreRequest $request, Event $event)
     {
-        $validated = $request->validated();
-        $validated['special_validity'] = $this->formatSpecialValidity($validated);
-        unset($validated['date'], $validated['amount']);
-        $event->tickets()->create($validated);
-        return redirect()->route('events.show', $event)->with('message', 'Ticket successfully created');
+        try {
+            $validated = $request->validated();
+            $validated['special_validity'] = $this->formatSpecialValidity($validated);
+            unset($validated['date'], $validated['amount']);
+            $event->tickets()->create($validated);
+            return redirect()->route('events.show', $event)->with('message', 'Ticket successfully created');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
+        }
     }
 
     public function edit(Event $event, Ticket $ticket)
     {
-        $sv = $ticket->getSV();
-        $ticket->cost = (int)$ticket->cost;
-        $ticket->special_validity = $sv['type'] ?? null;
-        $ticket->amount = $sv['amount'] ?? null;
-        $ticket->date = $sv['date'] ?? null;
-        return view('tickets.edit', compact('event', 'ticket'));
+        $specialValidity = $ticket->getSV();
+        $ticket->cost = (int)$ticket->getAttribute('cost');
+        $ticket->special_validity = @$specialValidity['type'];
+        $specialValidityVal = @$specialValidity['type'];
+        $specialValidityData = ['' => 'None'] + config('constants.common.special_validity_data');
+        $amount = @$specialValidity['amount'];
+        $ticket->amount = is_numeric($amount) ? $amount : null;
+        $ticket->date = @$specialValidity['date'];
+        return view('tickets.edit', [
+            'event' => $event,
+            'ticket' => $ticket,
+            'specialValidityVal' => $specialValidityVal,
+            'specialValidityData' => $specialValidityData
+        ]);
     }
 
     public function update(StoreRequest $request, Event $event, Ticket $ticket)
     {
-        $validated = $request->validated();
-        $validated['special_validity'] = $this->formatSpecialValidity($validated);
-        unset($validated['date'], $validated['amount']);
-        $ticket->update($validated);
-        return redirect()->route('events.show', $event)->with('message', 'Ticket successfully updated');
+        try {
+            $validated = $request->validated();
+            $validated['special_validity'] = $this->formatSpecialValidity($validated);
+            unset($validated['date'], $validated['amount']);
+            $ticket->update($validated);
+            return redirect()->route('events.show', $event)->with('message', 'Ticket successfully updated');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
+        }
     }
 
     public function destroy(Event $event, Ticket $ticket)
     {
-        $isExist = $ticket->registrations->count();
-        if ($isExist) {
-            return redirect()->route('events.show', $event)->with('error-message', 'This ticket is used');
+        try {
+            $isExist = $ticket->registrations->count();
+            if ($isExist) {
+                return redirect()->route('events.show', $event)->with('error-message', 'This ticket is used');
+            }
+            $ticket->delete();
+            return redirect()->route('events.show', $event)->with('message', 'Ticket successfully deleted');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
         }
-
-        $ticket->delete();
-        return redirect()->route('events.show', $event)->with('message', 'Ticket successfully deleted');
     }
 
-    private function formatSpecialValidity($validated)
+    private function formatSpecialValidity($data)
     {
-        if (empty($validated['special_validity'])) return null;
-        $specialValidity = $validated['special_validity'];
-        if (!in_array($specialValidity, ['date', 'amount'])) return null;
-        $data = [
+        if (empty($data['special_validity'])) {
+            return null;
+        }
+        $specialValidity = @$data['special_validity'];
+        if (!in_array($specialValidity, ['date', 'amount'])) {
+            return null;
+        }
+        $result = [
             'type' => $specialValidity,
-            $specialValidity => $validated[$specialValidity]
+            $specialValidity => $data[$specialValidity]
         ];
-        return json_encode($data);
+        return json_encode($result);
     }
 }

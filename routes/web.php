@@ -12,6 +12,8 @@
 */
 
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth', 'isAuth']], function () {
     Route::resource('events', 'EventController');

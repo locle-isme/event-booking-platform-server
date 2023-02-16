@@ -13,19 +13,19 @@ class StoreRequest extends FormRequest
 
     public function rules()
     {
-        $validation = [
+        $validRules = [
             'name' => 'required',
             'cost' => 'numeric|min:0|max:1000000000',
             'special_validity' => 'nullable',
         ];
-        $special_validity = $this->request->get('special_validity');
-        if ($special_validity) {
-            if ($special_validity == "amount") {
-                $validation['amount'] = 'required|numeric|min:0|max:1000000000';
-            } elseif ($special_validity == "date") {
-                $validation['date'] = 'date_format:m-d-Y|after:tomorrow';
-            }
+        $specialValidity = $this->request->get('special_validity');
+        $specialValidityRules = [
+            'amount' => 'required|numeric|min:0|max:1000000000',
+            'date' => 'date_format:Y-m-d|after:tomorrow',
+        ];
+        if (!empty($specialValidity) && in_array($specialValidity, array_keys($specialValidityRules))) {
+            $validRules[$specialValidity] = $specialValidityRules[$specialValidity];
         }
-        return $validation;
+        return $validRules;
     }
 }

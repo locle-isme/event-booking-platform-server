@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SessionRegistration extends Model
 {
-    protected $guarded = [];
     public $timestamps = false;
+    protected $guarded = [];
+    protected $table = 'session_registrations';
 }

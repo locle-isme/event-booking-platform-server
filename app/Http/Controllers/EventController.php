@@ -12,7 +12,9 @@ class EventController extends Controller
     public function index()
     {
         $events = Auth::user()->events->sortByDesc('date');
-        return view('events.index', compact('events'));
+        return view('events.index', [
+            'events' => $events,
+        ]);
     }
 
     public function create()
@@ -23,38 +25,33 @@ class EventController extends Controller
     public function store(StoreRequest $request)
     {
         $validated = $request->validated();
-        $validated['active'] = $request->active == null ? 0 : 1;
         $event = Auth::user()->events()->create($validated);
+        $active = $request->input('active');
+        $isActive = $active ? 1 : 0;
+        $validated['active'] = $isActive;
         return redirect()->route('events.show', $event)->with('message', 'Event successfully created');
     }
 
     public function show(Event $event)
     {
-        $event->sessions = $event->rooms->map(function ($room) {
-            return $room->sessions->map(function ($session) use ($room) {
-                $session->channel_room = $room->channel->name . ' / ' . $room->name;
-                $session->start = date('H:i', strtotime($session->start));
-                $session->end = date('H:i', strtotime($session->end));
-                $speakers = $session->sessionSpeakers->map(function ($sessionSpeaker) {
-                    return $sessionSpeaker->speaker->name;
-                })->toArray();
-                $session->speakers = implode(", ", $speakers);
-                return $session;
-            });
-        })->collapse()->sortBy('start')->values();
-
-        return view('events.detail', compact('event'));
+        return view('events.detail', [
+            'event' => $event,
+        ]);
     }
 
     public function edit(Event $event)
     {
-        return view('events.edit', compact('event'));
+        return view('events.edit', [
+            'event' => $event,
+        ]);
     }
 
     public function update(UpdateRequest $request, Event $event)
     {
         $validated = $request->validated();
-        $validated['active'] = $request->active == null ? 0 : 1;
+        $active = $request->input('active');
+        $isActive = $active ? 1 : 0;
+        $validated['active'] = $isActive;
         $isExist = $event->registrations()->count();
         if ($isExist && $validated['active'] == 0) {
             return redirect()->route('events.show', $event)->with('error-message', 'This event is used');
@@ -65,9 +62,8 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
-        $isExist1 = $event->tickets()->count();
-        $isExist2 = $event->channels()->count();
-        if ($isExist1 || $isExist2) {
+        $isAlready = Event::isAlready($event);
+        if ($isAlready) {
             return redirect()->route('events.show', $event)->with('error-message', 'This event is used');
         }
         $event->delete();

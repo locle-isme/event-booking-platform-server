@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attendee extends Model
 {
-    protected $guarded = [];
     public $timestamps = false;
+    protected $guarded = [];
+    protected $table = 'attendees';
 
     public function registrations()
     {

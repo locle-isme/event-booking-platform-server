@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SessionSpeaker extends Model
 {
-    protected $guarded = [];
     public $timestamps = false;
+    protected $guarded = [];
+    protected $table = 'session_speakers';
 
     public function session()
     {

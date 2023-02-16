@@ -6,18 +6,40 @@
         </div>
     </div>
 
-    <form class="needs-validation" novalidate
-          action="{{route('tickets.update', ['event' => $event, 'ticket' => $ticket])}}" method="post">
+    <form class="needs-validation" novalidate action="{{route('tickets.update', ['event' => $event, 'ticket' => $ticket])}}" method="POST">
         @csrf
-        @method('put')
-        @include('components.inputs.text',[ 'label' => 'Name', 'name' => config('constants.ticket.name'), 'value' => $ticket->{config('constants.ticket.name')} ])
-        @include('components.inputs.text',[ 'label' => 'Cost', 'name' => config('constants.ticket.cost'), 'type' => 'number', 'value' => $ticket->{config('constants.ticket.cost')}, ])
-        @include('components.inputs.select',[ 'label' => 'Special Validity', 'name' => config('constants.ticket.special_validity'), 'data' => config('constants.ticket.special_validity_data'), 'value' => $ticket->{config('constants.ticket.special_validity')}, ])
-        @include('components.inputs.text',[ 'label' => 'Maximum amount of tickets to be sold', 'name' => config('constants.ticket.amount'), 'type' => 'number', 'value' => $ticket->{config('constants.ticket.amount')}, ])
-        @include('components.inputs.text',[ 'label' => 'Tickets can be sold until', 'name' => config('constants.ticket.date'), 'type' => 'date', 'placeholder' => 'yyyy-mm-dd HH:MM', 'value' => $ticket->{config('constants.ticket.date')}, ])
+        @method('PUT')
+        @include('components.inputs.text', [
+            'label' => 'Ticket Name',
+            'name' => 'name',
+            'value' => $ticket->getAttribute('name'),
+        ])
+        @include('components.inputs.text', [
+            'label' => 'Cost',
+            'name' => 'cost',
+            'type' => 'number',
+            'value' => $ticket->getAttribute('cost'),
+        ])
+        @include('components.inputs.select', [
+            'label' => 'Special Validity',
+            'name' => 'special_validity',
+            'data' => $specialValidityData,
+            'value' => $ticket->getAttribute('special_validity'),
+        ])
+        @include('components.inputs.text', [
+            'label' => 'Maximum amount of tickets to be sold',
+            'name' => 'amount',
+            'type' => 'number',
+            'value' => $ticket->getAttribute('amount'),
+        ])
+        @include('components.inputs.text', [
+            'label' => 'Tickets can be sold until',
+            'name' => 'date',
+            'placeholder' => 'Y-m-d',
+            'value' => $ticket->getAttribute('date'),
+        ])
         <hr class="mb-4">
         <button class="btn btn-primary" type="submit">Save ticket</button>
         <a href="#" class="btn btn-link">Cancel</a>
     </form>
-
 @endsection

@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Speaker extends Model
 {
-    protected $guarded = [];
     public $timestamps = false;
+    protected $guarded = [];
+    protected $table = 'speakers';
 
     public function sessionSpeakers()
     {
