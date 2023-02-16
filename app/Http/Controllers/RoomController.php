@@ -13,10 +13,10 @@ class RoomController extends Controller
 {
     public function create(Event $event)
     {
-        $channels = $event->getAttribute('channels')->pluck('name', 'id')->toArray();
+        $channelData = $event->getAttribute('channels')->pluck('name', 'id')->toArray();
         return view('rooms.create', [
             'event' => $event,
-            'channels' => $channels,
+            'channelData' => $channelData,
         ]);
     }
 
@@ -42,10 +42,10 @@ class RoomController extends Controller
 
     public function edit(Event $event, Room $room)
     {
-        $channels = $event->getAttribute('channels')->pluck('name', 'id')->toArray();
+        $channelData = $event->getAttribute('channels')->pluck('name', 'id')->toArray();
         return view('rooms.edit', [
             'event' => $event,
-            'channels' => $channels,
+            'channelData' => $channelData,
             'room' => $room,
         ]);
     }
