@@ -10,10 +10,10 @@ class Organizer extends Authenticatable
 {
     use Notifiable;
 
+    public $timestamps = false;
     protected $guarded = [];
     protected $table = 'organizers';
     protected $rememberTokenName = false;
-    public $timestamps = false;
 
     public function events()
     {

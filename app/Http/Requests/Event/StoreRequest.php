@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Event;
 
+use App\Event;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -15,16 +16,28 @@ class StoreRequest extends FormRequest
 
     public function rules()
     {
+        return $this->getValidateRules();
+    }
+
+    protected function getValidateRules($event = null): array
+    {
+        if ($event instanceof Event) {
+            $uniqueSlug = Rule::unique('events')->where(function ($query) {
+                return $query->where('organizer_id', Auth::user()->getAuthIdentifier());
+            })->ignore($event->getAttribute('id'), 'id');
+        } else {
+            $uniqueSlug = Rule::unique('events')->where(function ($query) {
+                return $query->where('organizer_id', Auth::user()->getAuthIdentifier());
+            });
+        }
         return [
             'name' => 'required',
             'slug' => [
                 'required',
                 'regex:/^[a-zA-Z0-9-]+$/',
-                Rule::unique('events')->where(function ($query) {
-                    return $query->where('organizer_id', Auth::user()->getAuthIdentifier());
-                })
+                $uniqueSlug
             ],
-            'date' => 'required|date_format:m-d-Y|after:tomorrow'
+            'date' => 'required|date_format:Y-m-d|after:tomorrow'
         ];
     }
 
