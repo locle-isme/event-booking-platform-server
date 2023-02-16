@@ -13,7 +13,7 @@ class TicketController extends Controller
 {
     public function create(Event $event)
     {
-        $specialValidityData = ['' => 'None'] + config('constants.ticket.special_validity_data');
+        $specialValidityData = ['' => 'None'] + config('constants.common.special_validity_data');
         return view('tickets.create', [
             'event' => $event,
             'specialValidityData' => $specialValidityData
@@ -39,7 +39,7 @@ class TicketController extends Controller
         $ticket->cost = (int)$ticket->getAttribute('cost');
         $ticket->special_validity = @$specialValidity['type'];
         $specialValidityVal = @$specialValidity['type'];
-        $specialValidityData = ['' => 'None'] + config('constants.ticket.special_validity_data');
+        $specialValidityData = ['' => 'None'] + config('constants.common.special_validity_data');
         $ticket->amount = @$specialValidity['amount'] ?: 0;
         $ticket->date = @$specialValidity['date'];
         return view('tickets.edit', [
