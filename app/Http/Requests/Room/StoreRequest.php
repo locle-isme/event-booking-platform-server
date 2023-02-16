@@ -17,7 +17,7 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required',
             'channel' => 'required',
-            'capacity' => 'numeric|min:0|max:1000000000'
+            'capacity' => 'numeric|min:1|max:1000000000'
         ];
     }
 }

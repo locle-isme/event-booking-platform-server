@@ -26,4 +26,9 @@ class Room extends Model
             return $session->getNewFormat();
         });
     }
+
+    public static function isAlready(Room $room): bool
+    {
+        return (bool)$room->sessions()->count();
+    }
 }

@@ -13,57 +13,74 @@ class RoomController extends Controller
 {
     public function create(Event $event)
     {
-        $channels = [];
-        foreach ($event->channels->toArray() as $channel) {
-            $channels[$channel['id']] = $channel['name'];
-        }
-        return view('rooms.create', compact('event', 'channels'));
+        $channels = $event->getAttribute('channels')->pluck('name', 'id')->toArray();
+        return view('rooms.create', [
+            'event' => $event,
+            'channels' => $channels,
+        ]);
     }
 
     public function store(StoreRequest $request, Event $event)
     {
-        $validated = $request->validated();
-        $channel = $event->channels->where('id', $validated['channel'])->first();
-        if (!$channel) {
-            return redirect()->back()->withInput()->withErrors(['channel' => 'Channel invalid']);
+        try {
+            $validated = $request->validated();
+            $channelId = @$validated['channel'];
+            $channel = $event->channels()->where('id', $channelId)->first();
+            if (!$channel) {
+                return redirect()->back()->withInput()->withErrors(['channel' => 'Channel invalid']);
+            }
+            unset($validated['channel']);
+            $result = $channel->rooms()->create($validated);
+            if (empty($result)) {
+                return redirect()->route('events.index', $event)->with('error-message', 'Room create failed!');
+            }
+            return redirect()->route('events.show', $event)->with('message', 'Room successfully created');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
         }
-        unset($validated['channel']);
-        $channel->rooms()->create($validated);
-        return redirect()->route('events.show', $event)->with('message', 'Room successfully created');
     }
 
     public function edit(Event $event, Room $room)
     {
-        $channels = [];
-        foreach ($event->channels->toArray() as $channel) {
-            $channels[$channel['id']] = $channel['name'];
-        }
-        return view('rooms.edit', compact('event', 'room', 'channels'));
+        $channels = $event->getAttribute('channels')->pluck('name', 'id')->toArray();
+        return view('rooms.edit', [
+            'event' => $event,
+            'channels' => $channels,
+            'room' => $room,
+        ]);
     }
 
     public function update(StoreRequest $request, Event $event, Room $room)
     {
-        $validated = $request->validated();
-        $channel = $event->channels->where('id', $validated['channel'])->first();
-        if (!$channel) {
-            return redirect()->back()->withInput()->withErrors(['channel' => 'Channel invalid']);
+        try {
+            $validated = $request->validated();
+            $channel = $event->channels->where('id', $validated['channel'])->first();
+            if (!$channel) {
+                return redirect()->back()->withInput()->withErrors(['channel' => 'Channel invalid']);
+            }
+            $validated['channel_id'] = $channel->id;
+            unset($validated['channel']);
+            $result = $room->update($validated);
+            if (empty($result)) {
+                return redirect()->route('events.index', $event)->with('error-message', 'This room update failed!');
+            }
+            return redirect()->route('events.show', $event)->with('message', 'Room successfully updated');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
         }
-        $validated['channel_id'] = $channel->id;
-        unset($validated['channel']);
-        $room->update($validated);
-
-        return redirect()->route('events.show', $event)->with('message', 'Room successfully updated');
-
     }
 
     public function destroy(Event $event, Room $room)
     {
-        $isExist = $room->sessions->count();
-        if ($isExist) {
-            return redirect()->route('events.show', $event)->with('error-message', 'This room is used');
+        try {
+            $isAlready = Room::isAlready($room);
+            if ($isAlready) {
+                return redirect()->route('events.show', $event)->with('error-message', 'This room is used');
+            }
+            $room->delete();
+            return redirect()->route('events.show', $event)->with('message', 'Room successfully deleted');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
         }
-
-        $room->delete();
-        return redirect()->route('events.show', $event)->with('message', 'Room successfully deleted');
     }
 }
