@@ -42,4 +42,47 @@ class Session extends Model
         $this->speakers = implode(", ", $speakers);
         return $this;
     }
+
+    public static function isAvailable(Session $session, $data = [], $cCession = null): bool
+    {
+        $currentId = @$cCession['id'];
+        return $data['end'] < $session['start'] || $data['start'] > $session['end'] || $currentId == $session['id'];
+    }
+
+    public static function isAlready(Session $session): bool
+    {
+        return (bool)$session->sessionRegistrations()->count();
+    }
+
+    public function removeOldSpeakers()
+    {
+        try {
+            if (empty($this->id)) {
+                return 0;
+            }
+            $sessionSpeakers = $this->getAttribute('sessionSpeakers');
+            foreach ($sessionSpeakers as $sessionSpeaker) {
+                $sessionSpeaker->delete();
+            }
+            return 1;
+        } catch (\Throwable $e) {
+            return 0;
+        }
+    }
+
+    public function addNewSpeakers($speakerIds)
+    {
+        try {
+            if (empty($this->id)) {
+                return 0;
+            }
+            foreach ($speakerIds as $speakerId) {
+                $data = ['speaker_id' => $speakerId];
+                $this->sessionSpeakers()->create($data);
+            }
+            return 1;
+        } catch (\Throwable $e) {
+            return 0;
+        }
+    }
 }

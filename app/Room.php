@@ -31,4 +31,11 @@ class Room extends Model
     {
         return (bool)$room->sessions()->count();
     }
+
+    public static function isRoomValidate(Room $room, $data = [], $session = null)
+    {
+        return $room->getAttribute('sessions')->every(function ($s) use ($data, $session) {
+            return Session::isAvailable($s, $data, $session);
+        });
+    }
 }
