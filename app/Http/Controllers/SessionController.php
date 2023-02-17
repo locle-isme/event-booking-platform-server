@@ -6,6 +6,7 @@ use App\Event;
 use App\Http\Requests\CreateSessionRequest;
 use App\Http\Requests\Session\StoreRequest;
 use App\Http\Requests\UpdateSessionRequest;
+use App\Room;
 use App\Session;
 use App\SessionSpeaker;
 use App\Speaker;
@@ -15,110 +16,113 @@ class SessionController extends Controller
 {
     public function create(Event $event)
     {
-        $speakers = Speaker::all();
-        $newListSpeakers = [];
-        foreach ($speakers as $speaker) {
-            $newListSpeakers[$speaker->id] = $speaker->name;
-        }
-        $speakers = $newListSpeakers;
-        $rooms = [];
-        foreach ($event->rooms as $room) {
-            $rooms[$room->id] = $room->channel->name . ' / ' . $room->name;
-        }
-        return view('sessions.create', compact('event', 'speakers', 'rooms'));
+        $speakers = Speaker::query()->pluck('name', 'id')->toArray();
+        $rooms = $event->getAttribute('rooms');
+        $roomData = $rooms->map(function (Room $room) {
+            $room->name = $room->getAttribute('channel')->name . ' / ' . $room->getAttribute('name');
+            return $room;
+        })->pluck('name', 'id')->toArray();
+        return view('sessions.create', [
+            'speakers' => $speakers,
+            'roomData' => $roomData,
+            'event' => $event,
+        ]);
     }
 
     public function store(StoreRequest $request, Event $event)
     {
-        $data = $request->validated();
-        $room = $event->rooms->where('id', $data['room'])->first();
-        if (!$room) {
-            return redirect()->back()->withInput()->withErrors(['room' => 'Room invalid']);
+        try {
+            $data = $request->validated();
+            $room = $event->getAttribute('rooms')->where('id', $data['room'])->first();
+            if (!$room) {
+                return redirect()->back()->withInput()->withErrors(['room' => 'Room invalid']);
+            }
+            $isRoomAvailable = Room::isRoomValidate($room, $data);
+            if (!$isRoomAvailable) {
+                return redirect()->back()->withInput()->withErrors(['room' => 'Room already booked during this time']);
+            }
+            $speakers = $data['speakers'];
+            unset($data['room'], $data['speakers']);
+            $session = $room->sessions()->create($data);
+            if (empty($session)) {
+                return redirect()->route('events.index', $event)->with('error-message', 'Session create failed!');
+            }
+            foreach ($speakers as $speaker) {
+                $session->sessionSpeakers()->create(
+                    ['speaker_id' => $speaker]
+                );
+            }
+            return redirect()->route('events.show', $event)->with('message', 'Session successfully created');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
         }
-
-        $isRoomAvailable = $room->sessions->every(function ($s) use ($data) {
-            return $data['end'] < $s['start'] || $data['start'] > $s['end'];
-        });
-        if (!$isRoomAvailable) {
-            return redirect()->back()->withInput()->withErrors(['room' => 'Room Room already booked during this time']);
-        }
-        $speakers = $data['speakers'];
-        unset($data['room'], $data['speakers']);
-        $session = $room->sessions()->create($data);
-        foreach ($speakers as $speaker) {
-            $session->sessionSpeakers()->create(
-                ['speaker_id' => $speaker]
-            );
-        }
-        return redirect()->route('events.show', $event)->with('message', 'Session successfully created');
-
     }
 
     public function edit(Event $event, Session $session)
     {
-        $session->start = date('Y-m-d H:i', strtotime($session->start));
-        $session->end = date('Y-m-d H:i', strtotime($session->end));
-        $speakers = Speaker::all();
-        $newListSpeakers = [];
-        foreach ($speakers as $speaker) {
-            $newListSpeakers[$speaker->id] = $speaker->name;
-        }
-        $speakers = $newListSpeakers;
-        $rooms = [];
-        foreach ($event->rooms as $room) {
-            $rooms[$room->id] = $room->channel->name . ' / ' . $room->name;
-        }
-        $sessionSpeakers = $session->sessionSpeakers->map(function ($s){
+        $session->start = date('Y-m-d H:i', strtotime($session->getAttribute('start')));
+        $session->end = date('Y-m-d H:i', strtotime($session->getAttribute('end')));
+        $speakers = Speaker::query()->pluck('name', 'id')->toArray();
+        $rooms = $event->getAttribute('rooms');
+        $roomData = $rooms->map(function (Room $room) {
+            $room->name = $room->getAttribute('channel')->name . ' / ' . $room->getAttribute('name');
+            return $room;
+        })->pluck('name', 'id')->toArray();
+        $sessionSpeakers = $session->getAttribute('sessionSpeakers')->map(function ($s) {
             $speaker = $s->speaker;
             return $speaker->id;
         })->toArray();
-        $session->room = $session->room->id;
-        return view('sessions.edit', compact('event', 'session', 'speakers','rooms','sessionSpeakers'));
+        $session->room = $session->getAttribute('room')->id;
+        return view('sessions.edit', [
+            'event' => $event,
+            'speakers' => $speakers,
+            'roomData' => $roomData,
+            'session' => $session,
+            'sessionSpeakers' => $sessionSpeakers,
+        ]);
     }
 
     public function update(StoreRequest $request, Event $event, Session $session)
     {
-        $data = $request->validated();
-        $room = $event->rooms->where('id', $data['room'])->first();
-        if (!$room) {
-            return redirect()->back()->withInput()->withErrors(['room' => 'Room invalid']);
-        }
+        try {
+            $data = $request->validated();
+            $room = $event->getAttribute('rooms')->where('id', $data['room'])->first();
+            if (!$room) {
+                return redirect()->back()->withInput()->withErrors(['room' => 'Room invalid']);
+            }
+            $isRoomAvailable = Room::isRoomValidate($room, $data, $session);
+            if (!$isRoomAvailable) {
+                return redirect()->back()->withInput()->withErrors(['room' => 'Room Room already booked during this time']);
+            }
 
-        $isRoomAvailable = $room->sessions->every(function ($s) use ($data, $session) {
-            return ($data['end'] < $s['start'] || $data['start'] > $s['end']) || $session['id'] == $s['id'];
-        });
-
-        if (!$isRoomAvailable) {
-            return redirect()->back()->withInput()->withErrors(['room' => 'Room Room already booked during this time']);
+            $data['room_id'] = $data['room'];
+            $speakerIds = $data['speakers'];
+            unset($data['room'], $data['speakers']);
+            $session->update($data);
+            $oldSpeakerIds = $session->getAttribute('sessionSpeakers')->pluck('speaker_id')->toArray();
+            $oldSpeakerIds = array_values(array_unique($oldSpeakerIds));
+            if (array_diff($oldSpeakerIds, $speakerIds) || array_diff($speakerIds, $oldSpeakerIds)) {
+                $session->removeOldSpeakers();
+                $session->addNewSpeakers($speakerIds);
+            }
+            return redirect()->route('events.show', $event)->with('message', 'Session successfully updated');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
         }
-
-        $data['room_id'] = $data['room'];
-        $speakers = $data['speakers'];
-        unset($data['room'], $data['speakers']);
-        $session->update($data);
-        //remove all old records of session speakers
-        foreach ($session->sessionSpeakers as $sessionSpeaker) {
-            $sessionSpeaker->delete();
-        }
-        //add new records into session speakers
-        foreach ($speakers as $speaker) {
-            $session->sessionSpeakers()->create(
-                ['speaker_id' => $speaker]
-            );
-        }
-        return redirect()->route('events.show', $event)->with('message', 'Session successfully updated');
     }
 
     public function destroy(Event $event, Session $session)
     {
-        $isExist = $session->sessionRegistrations->count();
-        if ($isExist) {
-            return redirect()->route('events.show', $event)->with('error-message', 'This session is used');
+        try {
+            $isAlready = Session::isAlready($session);
+            if ($isAlready) {
+                return redirect()->route('events.show', $event)->with('error-message', 'This session is used');
+            }
+            $session->removeOldSpeakers();
+            $session->delete();
+            return redirect()->route('events.show', $event)->with('message', 'Session successfully deleted');
+        } catch (\Throwable $e) {
+            return redirect()->route('events.index', $event)->with('error-message', 'Something error please retry again!');
         }
-        foreach ($session->sessionSpeakers as $sessionSpeaker) {
-            $sessionSpeaker->delete();
-        }
-        $session->delete();
-        return redirect()->route('events.show', $event)->with('message', 'Session successfully deleted');
     }
 }

@@ -4,4 +4,8 @@ return [
         'amount' => 'Limited amount',
         'date' => 'Purchasable till date',
     ],
+    'session_type_data' => [
+        'talk' => 'Talk',
+        'workshop' => 'Workshop',
+    ],
 ];

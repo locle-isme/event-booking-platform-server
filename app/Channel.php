@@ -24,4 +24,9 @@ class Channel extends Model
     {
         return $this->hasManyThrough(Session::class, Room::class);
     }
+
+    public static function isAlready(Channel $channel): bool
+    {
+        return (bool) $channel->rooms()->count();
+    }
 }
