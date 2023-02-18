@@ -127,9 +127,6 @@ main {
     border-radius: 0;
 }
 
-/*
- * Card
- */
 .card-title {
     white-space: normal;
 }
@@ -143,6 +140,13 @@ main {
 }
 
 
-a{
+a {
     text-decoration: none !important;
+}
+
+
+.card-img-top.on-form {
+    width: 50%;
+    height: auto;
+    box-shadow: rgba(0, 0, 0, 0.18) 0 2px 4px;
 }

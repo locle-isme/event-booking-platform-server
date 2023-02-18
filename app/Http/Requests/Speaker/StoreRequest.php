@@ -16,8 +16,8 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required',
             'birthday' => 'required|date_format:Y-m-d|before:today',
-            'social_linking' => 'required|url',
-            'avatar' => 'required|image',
+            'social_linking' => 'nullable|url',
+            'avatar' => 'nullable|mimes:jpeg,png,jpg,gif',
             'description' => 'required'
         ];
     }

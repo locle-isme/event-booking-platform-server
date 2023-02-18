@@ -6,15 +6,14 @@ use App\Http\Requests\Speaker\StoreRequest;
 use App\Http\Requests\Speaker\UpdateRequest;
 use App\Http\Requests\UpdateSpeakerRequest;
 use App\Speaker;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Mockery\Exception;
 
 class SpeakerController extends Controller
 {
     public function index()
     {
-        $speakers = Speaker::all();
+        $speakers = Auth::user()->speakers->sortByDesc('id');
         return view('speakers.index', compact('speakers'));
     }
 
@@ -25,13 +24,15 @@ class SpeakerController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $validated = $request->validated();
-        $store_path = 'images\avatar';
-        $full_path = public_path($store_path);
-        $image_path = $this->uploadAvatar($validated['avatar'], $full_path);
-        $validated['avatar'] = $store_path . "\\" . $image_path;
-        Speaker::create($validated);
-        return redirect()->route('speakers.index')->with('message', 'Speaker successfully created');
+        try {
+            $validated = $request->validated();
+            $this->applyAvatar($validated);
+            Auth::user()->speakers()->create($validated);
+            return redirect()->route('speakers.index')->with('message', 'Speaker successfully created');
+        } catch (\Throwable $e) {
+            dd($e);
+            return redirect()->route('speakers.index')->with('error-message', 'Something error please retry again!');
+        }
     }
 
     protected function uploadAvatar($imageClass, $full_path)
@@ -46,27 +47,57 @@ class SpeakerController extends Controller
         return view('speakers.edit', compact('speaker'));
     }
 
-    public function update(UpdateRequest $request, Speaker $speaker)
+    public function update(StoreRequest $request, Speaker $speaker)
     {
-        $validated = $request->validated();
-        if (isset($validated['avatar'])) {
+        try {
+            $validated = $request->validated();
+            $this->applyAvatar($validated);
+            $speaker->update($validated);
+            return redirect()->route('speakers.index')->with('message', 'Speaker successfully updated');
+        } catch (\Throwable $e) {
+            return redirect()->route('speakers.index')->with('error-message', 'Something error please retry again!');
+        }
+    }
+
+    public function destroy(Speaker $speaker)
+    {
+        try {
+            $isAlready = Speaker::isAlready($speaker);
+            if ($isAlready) {
+                return redirect()->route('speakers.index')->with('error-message', 'This speaker is used');
+            }
+            $speaker->delete();
+            if (config('constants.common.default_avatar_image') != $speaker->getAttribute('avatar')) {
+                File::delete($speaker->getAttribute('avatar'));
+            }
+            return redirect()->route('speakers.index')->with('message', 'Speaker successfully deleted');
+        } catch (\Throwable $e) {
+            return redirect()->route('speakers.index')->with('error-message', 'Something error please retry again!');
+        }
+    }
+
+    public function applyAvatar(&$validated)
+    {
+        if (!empty($validated['avatar'])) {
             $store_path = 'images\avatar';
             $full_path = public_path($store_path);
             $image_path = $this->uploadAvatar($validated['avatar'], $full_path);
             $validated['avatar'] = $store_path . "\\" . $image_path;
         }
-        $speaker->update($validated);
-        return redirect()->route('speakers.index')->with('message', 'Speaker successfully updated');
     }
 
-    public function destroy(Speaker $speaker)
+    public function removeAvatar(Speaker $speaker)
     {
-        $isExist = $speaker->sessionSpeakers()->count();
-        if ($isExist) {
-            return redirect()->route('speakers.index')->with('error-message', 'This speaker is used');
+        try {
+            $avatarUrl = $speaker->getAttribute('avatar');
+            if (config('constants.common.default_avatar_image') != $avatarUrl && !empty($avatarUrl)) {
+                $speaker->update(['avatar' => null]);
+                File::delete($avatarUrl);
+                return redirect()->route('speakers.edit', $speaker)->with('message', 'Remove Avatar Success');
+            }
+            return redirect()->route('speakers.index')->with('error-message', 'Something error please retry again!');
+        } catch (\Throwable $e) {
+            return redirect()->route('speakers.index')->with('error-message', 'Something error please retry again!');
         }
-        $speaker->delete();
-        File::delete($speaker->avatar);
-        return redirect()->route('speakers.index')->with('message', 'Speaker successfully deleted');
     }
 }

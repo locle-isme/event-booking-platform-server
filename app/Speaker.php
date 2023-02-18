@@ -14,4 +14,23 @@ class Speaker extends Model
     {
         return $this->hasMany(SessionSpeaker::class);
     }
+
+    public function organizer()
+    {
+        return $this->belongsTo(Organizer::class);
+    }
+
+
+    public static function isAlready(Speaker $speaker)
+    {
+        return (bool)$speaker->sessionSpeakers()->count();
+    }
+
+    public function getAvatarAttribute($val): string
+    {
+        if (empty($val) || !file_exists($val)) {
+            return config('constants.common.default_avatar_image');
+        }
+        return $val;
+    }
 }

@@ -7,15 +7,44 @@
     </div>
 
     <form class="needs-validation" enctype="multipart/form-data" novalidate action="{{route('speakers.store')}}"
-          method="post">
+          method="POST">
         @csrf
-        @include('components.inputs.text',[ 'label' => 'Name', 'name' => config('constants.speaker.name') ])
-        @include('components.inputs.text',[ 'label' => 'Birthday', 'name' => config('constants.speaker.birthday'), 'placeholder' => 'yyyy-mm-dd', ])
-        @include('components.inputs.text',[ 'label' => 'Social linking', 'name' => config('constants.speaker.social_linking'), 'placeholder' => 'Example: https://www.facebook.com/LocLe.isme', ])
-        @include('components.inputs.text',[ 'label' => 'Avatar', 'name' => config('constants.speaker.avatar'), 'type' => 'file', 'class' => 'form-control-file', ])
-        @include('components.inputs.textarea',[ 'label' => 'Description', 'name' => config('constants.speaker.description'), 'colLeft' => 12, 'placeholder' => 'Write something about you . . .' ])
+        <div class="row">
+            <div class="col-8">
+                @include('components.inputs.text', [
+                            'label' => 'Name',
+                            'name' => 'name',
+                        ])
+                @include('components.inputs.text', [
+                    'label' => 'Birthday',
+                    'name' => 'birthday',
+                    'placeholder' => 'yyyy-mm-dd',
+                ])
+                @include('components.inputs.text', [
+                    'label' => 'Social linking',
+                    'name' => 'social_linking',
+                    'placeholder' => 'Example: https://www.facebook.com/LocLe.isme',
+                ])
+                @include('components.inputs.text', [
+                    'label' => 'Avatar',
+                    'name' => 'avatar',
+                    'type' => 'file',
+                    'class' => 'form-control-file',
+                ])
+                @include('components.inputs.textarea', [
+                    'label' => 'Description',
+                    'name' => 'description',
+                    'colLeft' => 12,
+                    'placeholder' => 'Write something...',
+                ])
+            </div>
+            <div class="col-4">
+                <img class="card-img-top on-form" src="{{ asset(config('constants.common.default_avatar_image')) }}"
+                     alt="Card image">
+            </div>
+        </div>
         <hr class="mb-4">
-        <button class="btn btn-primary" type="submit">Save session</button>
-        <a href="events/detail.html" class="btn btn-link">Cancel</a>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a href="#" class="btn btn-link">Cancel</a>
     </form>
 @endsection
