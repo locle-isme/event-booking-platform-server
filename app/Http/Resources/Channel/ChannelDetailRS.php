@@ -11,6 +11,10 @@ class ChannelDetailRS extends JsonResource
     {
         $response = collect($this->resource)->only('id', 'name');
         $response['rooms'] = RoomDetailRS::collection($this->rooms);
-        return $response;
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'rooms' => RoomDetailRS::collection($this->rooms),
+        ];
     }
 }

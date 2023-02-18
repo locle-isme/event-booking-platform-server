@@ -14,7 +14,7 @@ class EventOverviewRS extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'date' => $this->date,
-            'active' => $this->active,
+            'active' => (bool)$this->active,
             'organizer' => new OrganizerDetailRS($this->organizer)
         ];
     }

@@ -9,8 +9,10 @@ class RoomDetailRS extends JsonResource
 {
     public function toArray($request)
     {
-        $response = collect($this->resource)->only('id', 'name');
-        $response['sessions'] = SessionDetailRS::collection($this->sessions);
-        return $response;
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'sessions' => SessionDetailRS::collection($this->sessions),
+        ];
     }
 }

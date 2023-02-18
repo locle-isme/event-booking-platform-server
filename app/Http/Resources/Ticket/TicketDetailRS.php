@@ -8,10 +8,12 @@ class TicketDetailRS extends JsonResource
 {
     public function toArray($request)
     {
-        $response = collect($this->resource)->only('id', 'name', 'cost');
-        $response['cost'] = (int)$response['cost'];
-        $response['description'] = $this->description;
-        $response['available'] = $this->isAvailable();
-        return $response;
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'cost' => (double)$this->cost,
+            'description' => $this->description,
+            'available' => $this->isAvailable(),
+        ];
     }
 }
