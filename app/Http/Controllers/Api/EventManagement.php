@@ -13,7 +13,7 @@ use App\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class EventManagement extends Controller
+class EventManagement extends ApiController
 {
     public function index()
     {
@@ -41,7 +41,7 @@ class EventManagement extends Controller
 
     public function registration(Request $request)
     {
-        $attendee = Attendee::where(['login_token' => $request->token])->first();
+        $attendee = $this->auth->user();
         if (!$attendee) {
             return response()->json(['message' => 'User not logged in'], 401);
         }
@@ -67,9 +67,9 @@ class EventManagement extends Controller
         return response()->json(['message' => 'Registration successful']);
     }
 
-    public function getRegistrations(Request $request)
+    public function getRegistrations()
     {
-        $attendee = Attendee::where(['login_token' => $request->token])->first();
+        $attendee = $this->auth->user();
         if (!$attendee) {
             return response()->json(['message' => 'User not logged in'], 401);
         }

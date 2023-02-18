@@ -16,12 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1', 'middleware' => ['cors']], function () {
     Route::get('/events', 'Api\EventManagement@index');
     Route::get('/organizers/{oslug}/events/{eslug}', 'Api\EventManagement@detail');
-    Route::get('/login', 'Api\AttendeeManagement@login');
+    Route::post('/login', 'Api\AttendeeManagement@login');
     Route::post('/register', 'Api\AttendeeManagement@register');
     Route::get('/speakers/{id}', 'Api\SpeakerManagement@show');
     Route::get('/sessions/{id}', 'Api\SessionManagement@show');
-    Route::group(['middleware' => ['auth:api']], function () {
-        Route::get('/logout', 'Api\AttendeeManagement@logout');
+    Route::group(['middleware' => ['jwt.verify']], function () {
+        Route::post('/refresh', 'Api\AttendeeManagement@refresh');
+        Route::post('/logout', 'Api\AttendeeManagement@logout');
         Route::get('/registrations', 'Api\EventManagement@getRegistrations');
         Route::post('/organizers/{oslug}/events/{eslug}/registration', 'Api\EventManagement@registration');
     });

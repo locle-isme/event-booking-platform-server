@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Attendee  extends Authenticatable implements JWTSubject
+class Attendee extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     public $timestamps = false;
