@@ -8,7 +8,10 @@ class OrganizerDetailRS extends JsonResource
 {
     public function toArray($request)
     {
-        $response = collect($this->resource)->only('id', 'name', 'slug');
-        return $response;
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+        ];
     }
 }
