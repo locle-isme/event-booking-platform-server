@@ -10,6 +10,9 @@ class AttendeeDetailRS extends JsonResource
     {
         return [
             'id' => $this->id,
+            'email' => $this->email,
+            'first_name' => $this->firstname,
+            'last_name' => $this->lastname,
         ];
     }
 }

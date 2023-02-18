@@ -42,8 +42,9 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'jwt',
             'provider' => 'attendees',
+            'hash' => false,
         ],
     ],
 

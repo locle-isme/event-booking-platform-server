@@ -13,9 +13,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-
+        DB::table('attendees')->update(['password' => bcrypt('password')]);
         DB::table('organizers')->update(['password_hash' => bcrypt('demopass')]);
-        DB::table('attendees')->update(['password' => md5('password')]);
         $maxSpeakers = 20;
         if (!\App\Speaker::query()->count()) {
             factory(\App\Speaker::class, $maxSpeakers)->create();
