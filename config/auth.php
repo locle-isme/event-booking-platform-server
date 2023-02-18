@@ -42,8 +42,8 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
+            'driver' => 'jwt',
+            'provider' => 'attendees',
         ],
     ],
 
@@ -69,7 +69,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Organizer::class,
         ],
-
+        'attendees' => [
+            'driver' => 'eloquent',
+            'model' => App\Attendee::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

@@ -1,6 +1,5 @@
 <?php
 
-use App\Session;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,20 +13,28 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-
-        DB::table('organizers')->where('email', 'demo1@worldskills.org')->update(['password_hash' => bcrypt('demopass1')]);
-        DB::table('organizers')->where('email', 'demo2@worldskills.org')->update(['password_hash' => bcrypt('demopass2')]);
-        DB::table('attendees')->update(['password' => md5('password1')]);
-        $max_speakers = 3;
-        factory(\App\Speaker::class, $max_speakers)->create();
-        $sessions = Session::all();
-        foreach ($sessions as $session) {
-            DB::table('session_speakers')->insert(
-                [
-                    'session_id' => $session->id,
-                    'speaker_id' => rand(1, $max_speakers)
-                ]
-            );
+        DB::table('attendees')->update(['password' => bcrypt('password')]);
+        DB::table('organizers')->update(['password_hash' => bcrypt('demopass')]);
+        $maxSpeakers = 20;
+        if (!\App\Speaker::query()->count()) {
+            factory(\App\Speaker::class, $maxSpeakers)->create();
+        }
+        $organizers = \App\Organizer::query()->get();
+        foreach ($organizers as $organizer) {
+            $events = $organizer->events;
+            $speakersIds = $organizer->speakers->pluck('id')->toArray();
+            foreach ($events as $event) {
+                $rooms = $event->rooms;
+                foreach ($rooms as $room) {
+                    $sessions = $room->sessions;
+                    foreach ($sessions as $session){
+                        $dataUpdate = [
+                            'speaker_id' => $speakersIds[rand(0, count($speakersIds) - 1)],
+                        ];
+                        $session->sessionSpeakers()->create($dataUpdate);
+                    }
+                }
+            }
         }
     }
 }

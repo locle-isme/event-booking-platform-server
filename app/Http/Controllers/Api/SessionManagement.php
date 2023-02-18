@@ -6,7 +6,7 @@ use App\Http\Resources\Session\SessionDetailRS;
 use App\Session;
 use App\Http\Controllers\Controller;
 
-class SessionManagement extends Controller
+class SessionManagement extends ApiController
 {
     function show($id)
     {

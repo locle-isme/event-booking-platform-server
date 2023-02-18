@@ -8,4 +8,5 @@ return [
         'talk' => 'Talk',
         'workshop' => 'Workshop',
     ],
+    'default_avatar_image' => 'images\avatar\default.jpg',
 ];

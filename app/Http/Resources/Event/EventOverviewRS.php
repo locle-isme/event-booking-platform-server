@@ -9,8 +9,13 @@ class EventOverviewRS extends JsonResource
 {
     public function toArray($request)
     {
-        $response = collect($this->resource)->except('organizer_id');
-        $response['organizer'] = new OrganizerDetailRS($this->organizer);
-        return $response;
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'date' => $this->date,
+            'active' => (bool)$this->active,
+            'organizer' => new OrganizerDetailRS($this->organizer)
+        ];
     }
 }

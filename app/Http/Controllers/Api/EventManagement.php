@@ -8,16 +8,22 @@ use App\Http\Resources\Event\EventDetailRS;
 use App\Http\Resources\Event\EventOverviewRS;
 use App\Http\Resources\Event\EventRegistrationRS;
 use App\Organizer;
+use App\Registration;
 use App\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class EventManagement extends Controller
+class EventManagement extends ApiController
 {
     public function index()
     {
-        $events = Event::whereRaw('date > CURDATE()')->where('active', 1)->orderBy('date')->get();
-        return response()->json(['events' => EventOverviewRS::collection($events)]);
+        $events = Event::query()
+            ->whereRaw('date > CURDATE()')
+            ->where('active', 1)
+            ->orderBy('date')
+            ->paginate(10);
+        EventOverviewRS::collection($events);
+        return response()->json($events);
     }
 
     public function detail($oslug, $eslug)
@@ -30,15 +36,12 @@ class EventManagement extends Controller
         if (!$event) {
             return response()->json(['message' => 'Event not found'], 404);
         }
-        if (!$event->active) {
-            return response()->json(['message' => 'Event not ready'], 419);
-        }
         return response()->json(new EventDetailRS($event));
     }
 
     public function registration(Request $request)
     {
-        $attendee = Attendee::where(['login_token' => $request->token])->first();
+        $attendee = $this->auth->user();
         if (!$attendee) {
             return response()->json(['message' => 'User not logged in'], 401);
         }
@@ -64,12 +67,16 @@ class EventManagement extends Controller
         return response()->json(['message' => 'Registration successful']);
     }
 
-    public function getRegistrations(Request $request)
+    public function getRegistrations()
     {
-        $attendee = Attendee::where(['login_token' => $request->token])->first();
+        $attendee = $this->auth->user();
         if (!$attendee) {
             return response()->json(['message' => 'User not logged in'], 401);
         }
-        return response()->json(['registrations' => EventRegistrationRS::collection($attendee->registrations)]);
+        $registrations = Registration::query()
+            ->where('attendee_id', $attendee['id'])
+            ->paginate(10);
+        EventRegistrationRS::collection($registrations);
+        return response()->json($registrations);
     }
 }

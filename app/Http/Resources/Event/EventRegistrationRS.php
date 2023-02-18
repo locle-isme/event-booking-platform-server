@@ -9,13 +9,14 @@ class EventRegistrationRS extends JsonResource
 {
     public function toArray($request)
     {
+        $sessionIds = $this->sessionRegistrations->map(function ($sessionRegistration) {
+            return $sessionRegistration->session_id;
+        });
         return [
             'event' => new EventDetailRS($this->ticket->event),
             'registration_time' => $this->registration_time,
             'ticket' => new TicketDetailRS($this->ticket),
-            'session_ids' => $this->sessionRegistrations->map(function ($item) {
-                return $item->session_id;
-            })
+            'session_ids' => $sessionIds,
         ];
     }
 }

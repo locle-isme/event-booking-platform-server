@@ -20,8 +20,13 @@ class Organizer extends Authenticatable
         return $this->hasMany(Event::class);
     }
 
+    public function speakers()
+    {
+        return $this->hasMany(Speaker::class);
+    }
+
     public function getAuthPassword()
     {
-        return $this->password_hash;
+        return $this->getAttribute('password_hash');
     }
 }

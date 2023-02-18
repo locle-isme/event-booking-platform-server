@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth', 'isAuth']], function () {
     Route::resource('events', 'EventController');
     Route::resource('speakers', 'SpeakerController');
+    Route::get('speakers/{speaker}/remove-avatar', 'SpeakerController@removeAvatar')->name('speaker.remove_avatar');
     Route::resource('events/{event}/tickets', 'TicketController');
     Route::resource('events/{event}/sessions', 'SessionController');
     Route::resource('events/{event}/channels', 'ChannelController');

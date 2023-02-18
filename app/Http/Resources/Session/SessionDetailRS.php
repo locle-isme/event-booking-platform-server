@@ -2,19 +2,27 @@
 
 namespace App\Http\Resources\Session;
 
+use App\Http\Resources\Speaker\SpeakerOverViewRS;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SessionDetailRS extends JsonResource
 {
     public function toArray($request)
     {
-        $response = collect($this->resource)->except('room_id');
-        $response['speakers'] = $this->sessionSpeakers->map(function ($sessionSpeaker) {
+        $speakers = $this->sessionSpeakers->map(function ($sessionSpeaker) {
             return $sessionSpeaker->speaker;
         });
-        $response['organizer_slug'] = $this->resource->room->channel->event->organizer->slug;
-        $response['event_slug'] = $this->resource->room->channel->event->slug;
-        $response['cost'] = (int) $response['cost'];
-        return $response;
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'start' => $this->start,
+            'end' => $this->end,
+            'type' => $this->type,
+            'cost' => (double)$this->cost,
+            'speakers' => SpeakerOverViewRS::collection($speakers),
+            'organizer_slug' => $this->room->channel->event->organizer->slug,
+            'event_slug' => $this->room->channel->event->slug,
+        ];
     }
 }
