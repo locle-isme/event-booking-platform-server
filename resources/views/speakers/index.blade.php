@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         @foreach($speakers as $speaker)
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-3 my-2">
                 <div class="card">
                     <img class="card-img-top" src="{{$speaker->getAttribute('avatar')}}" alt="Card image"
                          style="width: 100%; height: auto">

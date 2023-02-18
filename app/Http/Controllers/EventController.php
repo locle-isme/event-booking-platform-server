@@ -50,11 +50,14 @@ class EventController extends Controller
     {
         $validated = $request->validated();
         $active = $request->input('active');
-        $isActive = $active ? 1 : 0;
-        $validated['active'] = $isActive;
-        $isExist = $event->registrations()->count();
-        if ($isExist && $validated['active'] == 0) {
-            return redirect()->route('events.show', $event)->with('error-message', 'This event is used');
+        if ($active !== null) {
+            $validated['active'] = $active ? 1 : 0;
+        }
+        $isAlready = $event->registrations()->count();
+        if (isset($validated['active'])) {
+            if ($isAlready) {
+                return redirect()->route('events.show', $event)->with('error-message', 'This event is used');
+            }
         }
         $event->update($validated);
         return redirect()->route('events.show', $event)->with('message', 'Event successfully updated');
