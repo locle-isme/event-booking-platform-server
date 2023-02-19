@@ -6,7 +6,7 @@ use App\Http\Resources\Speaker\SpeakerDetailRS;
 use App\Speaker;
 use App\Http\Controllers\Controller;
 
-class SpeakerManagement extends ApiController
+class SpeakerManagementController extends ApiController
 {
     function show($id)
     {

@@ -14,16 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group(['prefix' => 'v1', 'middleware' => ['cors']], function () {
-    Route::get('/events', 'Api\EventManagement@index');
-    Route::get('/organizers/{oslug}/events/{eslug}', 'Api\EventManagement@detail');
-    Route::post('/login', 'Api\AttendeeManagement@login');
-    Route::post('/register', 'Api\AttendeeManagement@register');
-    Route::get('/speakers/{id}', 'Api\SpeakerManagement@show');
-    Route::get('/sessions/{id}', 'Api\SessionManagement@show');
+    Route::get('/events', 'Api\EventManagementController@index');
+    Route::get('/organizers/{oslug}/events/{eslug}', 'Api\EventManagementController@detail');
+    Route::post('/login', 'Api\AttendeeManagementController@login');
+    Route::post('/register', 'Api\AttendeeManagementController@register');
+    Route::get('/speakers/{id}', 'Api\SpeakerManagementController@show');
+    Route::get('/sessions/{id}', 'Api\SessionManagementController@show');
     Route::group(['middleware' => ['jwt.verify']], function () {
-        Route::post('/refresh', 'Api\AttendeeManagement@refresh');
-        Route::post('/logout', 'Api\AttendeeManagement@logout');
-        Route::get('/registrations', 'Api\EventManagement@getRegistrations');
-        Route::post('/organizers/{oslug}/events/{eslug}/registration', 'Api\EventManagement@registration');
+        Route::post('/refresh', 'Api\AttendeeManagementController@refresh');
+        Route::post('/logout', 'Api\AttendeeManagementController@logout');
+        Route::get('/registrations', 'Api\EventManagementController@getRegistrations');
+        Route::post('/organizers/{oslug}/events/{eslug}/registration', 'Api\EventManagementController@registration');
     });
 });

@@ -13,7 +13,7 @@ use App\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class EventManagement extends ApiController
+class EventManagementController extends ApiController
 {
     public function index()
     {
