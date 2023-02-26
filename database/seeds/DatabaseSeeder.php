@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        $this->call(AdminSeeder::class);
         DB::table('attendees')->update(['password' => bcrypt('password')]);
         DB::table('organizers')->update(['password_hash' => bcrypt('demopass')]);
         $maxSpeakers = 20;

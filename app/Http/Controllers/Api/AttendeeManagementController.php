@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
 
-class AttendeeManagement extends ApiController
+class AttendeeManagementController extends ApiController
 {
     public function login(Request $request)
     {
@@ -31,12 +31,11 @@ class AttendeeManagement extends ApiController
     {
         $validated = $request->validated();
         $validated['password'] = bcrypt($validated['password']);
-        $validated['login_token'] = '';
         $attendee = Attendee::create($validated);
         if (!empty($attendee)){
             return response()->json(new AttendeeDetailRS($attendee));
         }
-        return response()->json(['message' => 'New register failed', 500]);
+        return response()->json(['message' => 'Register failed', 500]);
     }
 
     public function logout()
