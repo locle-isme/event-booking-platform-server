@@ -12,7 +12,7 @@ class Authenticate extends Middleware
     public function handle($request, Closure $next, ...$guards)
     {
         $this->guards = $guards;
-        $this->authenticate($request, $guards);
+        $this->authenticate($request, $guards); //please re-add this method if missing to check auth
         return $next($request);
     }
 
