@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'organizer',
         'passwords' => 'users',
     ],
 
@@ -36,14 +36,18 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'organizer' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'organizers',
         ],
 
         'api' => [
             'driver' => 'jwt',
             'provider' => 'attendees',
+        ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
         ],
     ],
 
@@ -65,7 +69,7 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'organizers' => [
             'driver' => 'eloquent',
             'model' => App\Organizer::class,
         ],
@@ -73,10 +77,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Attendee::class,
         ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Admin::class,
+        ],
     ],
 
     /*
@@ -95,8 +99,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'organizers' => [
+            'provider' => 'organizers',
             'table' => 'password_resets',
             'expire' => 60,
         ],
