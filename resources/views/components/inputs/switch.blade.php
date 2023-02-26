@@ -1,8 +1,9 @@
 @php
     $colLeft = $colLeft ?? 4;
     $value = old($name, $value ?? 0);
+    $rowClass = $rowClass ?? '';
 @endphp
-<div class="row">
+<div class="row {{$rowClass}}">
     <div class="col-12 col-lg-{{$colLeft}} mb-3">
         <div class="custom-control custom-switch">
             <input type="checkbox" name="{{$name}}"
