@@ -8,13 +8,16 @@
     $rowClass = $rowClass ?? '';
     $disabled = $disabled ?? '';
     $disabled = $disabled == true ? 'disabled' : '';
+    $inputData = $inputData ?? [];
 @endphp
 <div class="row {{$rowClass}}">
     <div class="col-12 col-lg-{{$colLeft}} mb-3">
         <label for="input{{$name}}">{{$label}}</label>
-        <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
         <input type="{{$type}}" class="{{$class}} @if($errors->has($name)) is-invalid @endif"
                id="input{{ucfirst($name)}}"
+               @foreach($inputData as $dataKey => $dataVal)
+               data-{{$dataKey}}="{{$dataVal}}"
+               @endforeach
                name="{{$name}}" placeholder="{{$placeholder}}" value="{{$value}}" {{$disabled}}>
         @if($errors->has($name))
             <div class="invalid-feedback">
