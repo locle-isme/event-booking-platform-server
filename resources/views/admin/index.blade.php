@@ -5,7 +5,8 @@
         <h1 class="h2">Organizer management</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
-                <a href="{{route('admin.organizer.create')}}" class="btn btn-sm btn-outline-secondary">Create new organizer</a>
+                <a href="{{route('admin.organizer.create')}}" class="btn btn-sm btn-outline-secondary">Create new
+                    organizer</a>
             </div>
         </div>
     </div>
@@ -16,7 +17,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Email</th>
-                    <th>Name</th>
+                    <th>Company Name</th>
                     <th>Slug</th>
                     <th>Active</th>
                     <th></th>
@@ -34,6 +35,10 @@
                                 'label' => 'Active',
                                 'name' => 'active',
                                 'value' => $organizer['active'],
+                                'unique' => true,
+                                'inputData' => [
+                                    'organizer-id' => $organizer['id'],
+                                ],
                             ])
                         </td>
                         <td class="text-capitalize">
@@ -53,4 +58,35 @@
         </div>
     </div>
 @endsection
-
+@push('js')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('input[name=active]').on('change', async function () {
+                let current = $(this);
+                let active = current.is(':checked');
+                let organizerId = current.data('organizer-id');
+                if (organizerId) {
+                    let dataToSend = {
+                        active: active,
+                        _token: '{{csrf_token()}}'
+                    };
+                    let uri = `/admin/organizer/${organizerId}/active`;
+                    $.ajax({
+                        url: uri,
+                        type: 'PUT',
+                        data: dataToSend,
+                        success: function (response) {
+                            // handle the response from the server
+                            console.log(response);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert('Update setting failed! Please contact admin');
+                            // handle any errors that occur
+                            console.log('Error:', textStatus, errorThrown);
+                        }
+                    });
+                }
+            })
+        })
+    </script>
+@endpush

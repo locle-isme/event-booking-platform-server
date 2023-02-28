@@ -47,7 +47,7 @@ class OrganizerController extends BaseController
         return view('admin.organizers.create');
     }
 
-    protected function store(StoreRequest $request)
+    public function store(StoreRequest $request)
     {
         try {
             $data = $request->validated();
@@ -68,7 +68,7 @@ class OrganizerController extends BaseController
     }
 
 
-    protected function update(UpdateRequest $request, Organizer $organizer)
+    public function update(UpdateRequest $request, Organizer $organizer)
     {
         try {
             $data = $request->validated();
@@ -77,13 +77,31 @@ class OrganizerController extends BaseController
                 $data['password_hash'] = bcrypt($data['password']);
             }
             unset($data['password'], $data['email']);
-            $result = $organizer->query()->update($data);
+            $result = $organizer->update($data);
             if (empty($result)) {
                 return back()->withInput()->with('error-message', 'Update this organizer failed');
             }
             return redirect()->route('admin.home')->with('message', 'Organizer successfully updated');
         } catch (\Throwable $e) {
             return back()->withInput()->with('error-message', 'Update this organizer failed');
+        }
+    }
+
+    public function active(Request $request, Organizer $organizer)
+    {
+        try {
+            $active = $request->input('active', 0);
+            $active = $active == 'true' ? 1 : 0;
+            $data = [
+                'active' => $active,
+            ];
+            $result = $organizer->update($data);
+            if (empty($result)) {
+                return response()->json(['message' => 'Update failed'], 400);
+            }
+            return response()->json(['message' => 'Update Successfully']);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Update failed'], 400);
         }
     }
 }

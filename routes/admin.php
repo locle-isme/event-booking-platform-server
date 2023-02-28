@@ -18,5 +18,8 @@ Route::name('admin.')->group(function () {
         Route::get('organizer/{organizer}/force-login', 'Admin\OrganizerController@forceLogin')
                     ->name('organizer.force_login');
         Route::post('logout', 'Admin\Auth\LoginController@logout')->name('logout');
+        Route::match(['PUT', 'PATCH'], 'organizer/{organizer}/active', 'Admin\OrganizerController@active')
+            ->name('active');
+
     });
 });

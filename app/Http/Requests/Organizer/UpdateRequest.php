@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Organizer;
 
+use Illuminate\Validation\Rule;
+
 class UpdateRequest extends StoreRequest
 {
     public function authorize()
@@ -12,7 +14,12 @@ class UpdateRequest extends StoreRequest
     public function rules()
     {
         $rules = $this->getValidateRules();
-        $rules['slug'] = 'required|max:255|regex:/^[a-zA-Z0-9-]+$/|unique:organizers';
+        $rules['slug'] = [
+            'required',
+            'max:255',
+            'regex:/^[a-zA-Z0-9-]+$/',
+            Rule::unique('organizers')->ignore($this->route('organizer')->getAttribute('id'), 'id'),
+        ];
         unset($rules['email']);
         if (empty($this->input('password'))) {
             unset($rules['password']);
