@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Attendee;
+use App\Models\Attendee;
 use App\Http\Requests\Attendee\StoreRequest;
 use App\Http\Resources\Attendee\AttendeeDetailRS;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class AttendeeManagementController extends ApiController
 {

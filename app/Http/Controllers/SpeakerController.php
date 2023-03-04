@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Speaker\StoreRequest;
-use App\Http\Requests\Speaker\UpdateRequest;
-use App\Http\Requests\UpdateSpeakerRequest;
-use App\Speaker;
+use App\Models\Speaker;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 

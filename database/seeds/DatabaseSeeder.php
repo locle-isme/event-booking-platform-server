@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
         DB::table('attendees')->update(['password' => bcrypt('password')]);
         DB::table('organizers')->update(['password_hash' => bcrypt('demopass')]);
         $maxSpeakers = 20;
-        if (!\App\Speaker::query()->count()) {
-            factory(\App\Speaker::class, $maxSpeakers)->create();
+        if (!\App\Models\Speaker::query()->count()) {
+            factory(\App\Models\Speaker::class, $maxSpeakers)->create();
         }
-        $organizers = \App\Organizer::query()->get();
+        $organizers = \App\Models\Organizer::query()->get();
         foreach ($organizers as $organizer) {
             $events = $organizer->events;
             $speakersIds = $organizer->speakers->pluck('id')->toArray();
