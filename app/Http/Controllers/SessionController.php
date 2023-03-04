@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
-use App\Http\Requests\CreateSessionRequest;
+use App\Models\Event;
 use App\Http\Requests\Session\StoreRequest;
-use App\Http\Requests\UpdateSessionRequest;
-use App\Room;
-use App\Session;
-use App\SessionSpeaker;
-use App\Speaker;
-use Illuminate\Http\Request;
+use App\Models\Room;
+use App\Models\Session;
+use App\Models\Speaker;
 
 class SessionController extends Controller
 {

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
-use App\Http\Requests\CreateTicketRequest;
+use App\Models\Event;
 use App\Http\Requests\Ticket\StoreRequest;
-use App\Http\Requests\UpdateTicketRequest;
-use App\Ticket;
-use Illuminate\Http\Request;
+use App\Models\Ticket;
 
 class TicketController extends Controller
 {

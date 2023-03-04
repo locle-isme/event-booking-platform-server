@@ -1,6 +1,6 @@
 <?php
 
-use App\Speaker;
+use App\Models\Speaker;
 use Faker\Generator as Faker;
 
 $factory->define(Speaker::class, function (Faker $faker) {

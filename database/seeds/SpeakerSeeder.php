@@ -6,6 +6,6 @@ class SpeakerSeeder extends Seeder
 {
     public function run()
     {
-        \App\Speaker::factory(5)->create();
+        \App\Models\Speaker::factory(5)->create();
     }
 }

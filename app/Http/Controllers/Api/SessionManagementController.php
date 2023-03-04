@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Resources\Session\SessionDetailRS;
-use App\Session;
-use App\Http\Controllers\Controller;
+use App\Models\Session;
 
 class SessionManagementController extends ApiController
 {

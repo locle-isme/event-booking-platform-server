@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Channel;
-use App\Event;
+use App\Models\Channel;
+use App\Models\Event;
 use App\Http\Requests\Channel\StoreRequest;
 
 class ChannelController extends Controller

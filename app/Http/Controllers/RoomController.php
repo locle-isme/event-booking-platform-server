@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
-use App\Http\Requests\CreateRoomRequest;
+use App\Models\Event;
 use App\Http\Requests\Room\StoreRequest;
-use App\Http\Requests\UpdateRoomRequest;
 use App\Room;
-use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {

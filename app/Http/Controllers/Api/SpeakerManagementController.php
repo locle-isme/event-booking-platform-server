@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Resources\Speaker\SpeakerDetailRS;
-use App\Speaker;
-use App\Http\Controllers\Controller;
+use App\Models\Speaker;
 
 class SpeakerManagementController extends ApiController
 {

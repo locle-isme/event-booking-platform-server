@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Attendee;
-use App\Event;
+use App\Models\Event;
 use App\Http\Resources\Event\EventDetailRS;
 use App\Http\Resources\Event\EventOverviewRS;
 use App\Http\Resources\Event\EventRegistrationRS;
-use App\Organizer;
-use App\Registration;
-use App\Ticket;
+use App\Models\Organizer;
+use App\Models\Registration;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class EventManagementController extends ApiController
 {

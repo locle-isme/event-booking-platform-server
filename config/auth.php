@@ -71,15 +71,15 @@ return [
     'providers' => [
         'organizers' => [
             'driver' => 'eloquent',
-            'model' => App\Organizer::class,
+            'model' => App\Models\Organizer::class,
         ],
         'attendees' => [
             'driver' => 'eloquent',
-            'model' => App\Attendee::class,
+            'model' => App\Models\Attendee::class,
         ],
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Admin::class,
+            'model' => App\Models\Admin::class,
         ],
     ],
 
